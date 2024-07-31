@@ -28,7 +28,7 @@ export default function RootPage() {
       </section>
       
       <section className="mt-16">
-        <h2 className="text-2xl font-bold mb-4 text-center">주요 기능</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">주요 기능222</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded shadow dark:bg-gray-800">
             <h3 className="text-xl font-bold mb-2">정보 공유</h3>
