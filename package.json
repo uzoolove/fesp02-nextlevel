@@ -14,7 +14,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
-    "react-spinners": "^0.14.1"
+    "react-spinners": "^0.14.1",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@types/node": "^20",

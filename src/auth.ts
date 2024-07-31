@@ -6,6 +6,7 @@ import { UserForm } from './types';
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true, // 배포시 필요
   providers: [ 
     CredentialsProvider({
       // email/password 정보로 로그인 요청
