@@ -1,8 +1,10 @@
 import Submit from "@/components/Submit";
+import { PostComment } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CommentItem(){
+export default function CommentItem({ item }: { item: PostComment }){
+  console.log(item)
   return (
     <div className="shadow-md rounded-lg p-4 mb-4">
       <div className="flex justify-between items-center mb-2">
@@ -10,15 +12,15 @@ export default function CommentItem(){
           className="w-8 mr-2 rounded-full"
           width="40"
           height="40"
-          src="https://api.fesp.shop/files/00-sample/user-apeach.webp"
+          src={`${process.env.NEXT_PUBLIC_API_SERVER}${item.user.image}`}
           alt="프로필 이미지"
         />
-        <Link href="" className="text-orange-400">어피치</Link>
-        <time className="ml-auto text-gray-500" dateTime="2024.07.02 14:11:22">2024.07.02 14:11:22</time>
+        <Link href="" className="text-orange-400">{item.user.name}</Link>
+        <time className="ml-auto text-gray-500" dateTime={item.updatedAt}>{item.updatedAt}</time>
       </div>
       <div className="flex justify-between items-center mb-2">
         <form action="#">
-          <pre className="whitespace-pre-wrap text-sm">화이팅!</pre>
+          <pre className="whitespace-pre-wrap text-sm">{item.content}</pre>
           <Submit bgColor="red" size="sm">삭제</Submit>
         </form>
       </div>

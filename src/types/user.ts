@@ -25,3 +25,8 @@ export type UserForm = Pick<UserData, 'name' | 'email' | 'image'> & {
   password: string,
   attach?: string | string[],
 };
+
+export type UserLoginForm = Pick<UserForm, 'email' | 'password'>;
+
+
+export type ReplyUser = Pick<UserData, '_id' | 'name' | 'image'>;

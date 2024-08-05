@@ -1,7 +1,7 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth, { AuthError, CredentialsSignin } from "next-auth";
 import { login } from './model/action/userAction';
-import { UserForm } from './types';
+import { UserForm, UserLoginForm, ValidationErrorRes } from './types';
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
@@ -9,9 +9,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true, // 배포시 필요
   providers: [ 
     CredentialsProvider({
+      credentials: {
+        email: {},
+        password: {},
+      },
       // email/password 정보로 로그인 요청
       async authorize(credentials) { // credentials: 서버 액션에서 호출한 signIn('credentials', 사용자 정보) 메소드의 두번째 인수(사용자 정보)
-        const resJson = await login(credentials as UserForm);
+        const resJson = await login(credentials as UserLoginForm);
 
         if(resJson.ok){
         
@@ -28,20 +32,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           
           
         }else{
-          const error = new CredentialsSignin();
-          error.code = resJson.message;
-          throw error;
-          // console.error(resJson.message);
-          // throw new AuthError(resJson.message);
+          throw new CredentialsSignin(resJson.message, { cause: resJson });
         }
-
       }
     })
   ],
   session: {
     strategy: 'jwt', // JSON Web Token 사용(기본값)
-    // maxAge: 60 * 60 * 24, // 세션 만료 시간(sec)
-    maxAge: 60,
+    maxAge: 60 * 60 * 24, // 세션 만료 시간(sec)
+    // maxAge: 60,
   },
   pages: {
     signIn: '/notice' // Default: '/auth/signin'
@@ -98,7 +97,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           break;
       }
 
-      return true
+      return true;
     },
     // 로그인 성공한 회원 정보로 token 객체 설정
     // 최초 로그인시 user 객체 전달, 업데이트시 user는 없음

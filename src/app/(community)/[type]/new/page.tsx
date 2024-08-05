@@ -1,4 +1,5 @@
 import Submit from "@/components/Submit";
+import { addPost } from "@/model/action/postAction";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -22,7 +23,7 @@ export default function Page({ params }: { params: { type: string } }) {
         <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200">게시글 등록</h2>
       </div>
       <section className="mb-8 p-4">
-        <form action={`/${params.type}/1`}>
+        <form action={ addPost }>
           <div className="my-4">
             <label className="block text-lg content-center" htmlFor="title">제목</label>
             <input

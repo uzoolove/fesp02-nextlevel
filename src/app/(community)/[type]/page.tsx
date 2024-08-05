@@ -3,6 +3,8 @@ import Submit from "@/components/Submit";
 import { Metadata } from "next";
 import Link from "next/link";
 import ListItem from "./ListItem";
+import Search from "@/components/Search";
+import { fetchPosts } from "@/model/fetch/postFetch";
 
 export function generateMetadata({ params }: { params: { type: string } }): Metadata{
   const boardName = params.type;
@@ -20,8 +22,10 @@ export function generateMetadata({ params }: { params: { type: string } }): Meta
   };
 }
 
-export default function Page({ params }: { params: { type: string } }) {
-  const list = [<ListItem key={1} />, <ListItem key={2} />];
+export default async function Page({ params }: { params: { type: string } }) {
+  const data = await fetchPosts(params.type);
+  console.log(params.type, data)
+  const list = data.map(item => <ListItem key={item._id} item={item} />);
 
   return (
     <main className="min-w-80 p-10">
@@ -29,6 +33,7 @@ export default function Page({ params }: { params: { type: string } }) {
         <h2 className="pb-4 text-2xl font-bold text-gray-700 dark:text-gray-200">정보 공유</h2>
       </div>
       <div className="flex justify-end mr-4">
+        <Search />
         <Link href={`/${params.type}/new`} className="bg-orange-500 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded">글작성</Link>
       </div>
       <section className="pt-10">

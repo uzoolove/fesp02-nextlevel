@@ -1,4 +1,4 @@
-import { ApiResWithValidation, FileRes, MultiItem, SingleItem, UserData, UserForm } from "@/types";
+import { ApiResWithValidation, FileRes, MultiItem, SingleItem, UserData, UserForm, UserLoginForm } from "@/types";
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
@@ -18,6 +18,9 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
     // 프로필 이미지를 추가한 경우
     const fileRes = await fetch(`${SERVER}/files`, {
       method: 'POST',
+      headers: {
+        'client-id': '00-next-level'
+      },
       body: formData,
     });
 
@@ -32,6 +35,7 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
   const res = await fetch(`${SERVER}/users`, {
     method: 'POST',
     headers: {
+      'client-id': '00-next-level',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(userObj)
@@ -40,10 +44,11 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
   return res.json();
 }
 
-export async function login(userObj: UserForm): Promise<ApiResWithValidation<SingleItem<UserData>, UserForm>> {
+export async function login(userObj: UserLoginForm): Promise<ApiResWithValidation<SingleItem<UserData>, UserLoginForm>> {
   const res = await fetch(`${SERVER}/users/login`, {
     method: 'POST',
     headers: {
+      'client-id': '00-next-level',
       'Content-type': 'application/json'
     },
     body: JSON.stringify(userObj),

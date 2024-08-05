@@ -1,11 +1,13 @@
-import { UserData } from "./user"
+import { ReplyUser } from "./user"
 
 export interface PostComment {
   _id: number,
   user_id: number,
-  user: UserData,
+  user: ReplyUser,
   content: string,
   like: number,
+  // videoId?: string,
+  extra?: Record<string, any>,
   createdAt: string,
   updatedAt: string,
 }
@@ -15,7 +17,7 @@ export interface Post {
   type?: string,
   title: string,
   content: string,
-  user: Pick<UserData, '_id' | 'name' | 'image'>,
+  user: ReplyUser,
   views: number,
   repliesCount: number,
   replies?: PostComment[],

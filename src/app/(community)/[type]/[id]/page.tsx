@@ -1,21 +1,30 @@
-import Link from "next/link";
 import { Metadata } from "next";
-import Submit from "@/components/Submit";
 import CommentList from "./CommentList";
+import { fetchPost } from "@/model/fetch/postFetch";
+import { notFound } from "next/navigation";
+import InfoForm from "./InfoForm";
 
-export function generateMetadata({ params }: { params: { type: string, id: string } }): Metadata {
-  const boardName = params.type;
-  return {
-    title: {
-      absolute: `${boardName} - 좋은 소식이 있습니다.`
-    },
-    description: `${boardName} - 좋은 소식을 가지고 왔습니다. 오늘 드디어...`,
-    openGraph: {
-      title: `${boardName} - 좋은 소식이 있습니다.`,
-      description: `${boardName} - 좋은 소식을 가지고 왔습니다. 오늘 드디어...`,
-      url: `/${params.type}/${params.id}`
-    }
-  };
+export async function generateMetadata({ params }: { params: { type: string, id: string } }): Promise<Metadata | null>{
+  const item = await fetchPost(params.id);
+  if(item){
+    const description = item.content.length>150 ? item.content.slice(0, 150) + '...': item.content;
+    
+    const boardName = params.type;
+    return {
+      title: {
+        absolute: `${boardName} - ${item.title}`
+      },
+      description: `${boardName} - ${description}`,
+      openGraph: {
+        title: `${boardName} - ${item.title}`,
+        description: `${boardName} - ${description}`,
+        url: `/${params.type}/${params.id}`
+      }
+    };
+  }else{
+    return null;
+  }
+  
 }
 
 export async function generateStaticParams(){
@@ -25,29 +34,15 @@ export async function generateStaticParams(){
   ];
 }
 
-export default function Page({ params }: { params: { type: string, id: string } }) {
+export default async function Page({ params }: { params: { type: string, id: string } }) {
+  const item = await fetchPost(params.id);
+  if(item === null) notFound();
   return (
     <main className="container mx-auto mt-4 px-4">
 
-      <section className="mb-8 p-4">
-        <form action={`/${params.type}`}>
-          <div className="font-semibold text-xl">제목 : 좋은 소식이 있습니다.</div>
-          <div className="text-right text-gray-400">작성자 : 제이지</div>
-          <div className="mb-4">
-            <div>
-              <pre className="font-roboto w-full p-2 whitespace-pre-wrap">좋은 소식을 가지고 왔습니다.<br />오늘 드디어 최종 면접을 합니다.<br />많이 응원해 주세요^^</pre>
-            </div>
-            <hr/>
-          </div>
-          <div className="flex justify-end my-4">
-            <Link href={`/${params.type}`} className="bg-orange-500 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded">목록</Link>
-            <Link href={`/${params.type}/${params.id}/edit`} className="bg-gray-900 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded">수정</Link>
-            <Submit bgColor="red">삭제</Submit>
-          </div>
-        </form>
-      </section>
+      <InfoForm id={params.id} type={params.type} item={item} />
 
-      <CommentList />
+      <CommentList type={params.type} id={params.id} />
 
     </main>
   );

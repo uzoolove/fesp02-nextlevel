@@ -5,7 +5,6 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '80',
         pathname: '/files/**',
       },
       {
@@ -27,6 +26,7 @@ const nextConfig = {
 
     
   },
+  // reactStrictMode: false, // Strict Mode 비활성화
 };
 
 export default nextConfig;
