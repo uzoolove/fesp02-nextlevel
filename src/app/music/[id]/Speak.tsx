@@ -74,30 +74,27 @@ export default function Voice() {
   }
 
   return (
-    <>
-      
-      <div className="p-4 bg-white">
-        <div className="mb-6 flex items-center">
-          <input
-            type="checkbox"
-            id="enableVoice"
-            checked={isVoiceEnabled}
-            onChange={(event) => setIsVoiceEnabled(event.target.checked)}
-            className="h-6 w-6 text-blue-500 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <label htmlFor="enableVoice" className="ml-3 text-lg font-semibold text-gray-700">
-            DJ 멘트 듣기
-          </label>
-        </div>
-        {isVoiceEnabled && (
-          <div className="mb-6">
-            <label htmlFor="voice" className="block text-lg font-semibold text-gray-700 mb-2">
-              DJ 목소리 선택
-            </label>
-            {voiceSelect}
-          </div>
-        )}
+    <div className="p-4 bg-white">
+      <div className="mb-6 flex items-center">
+        <input
+          type="checkbox"
+          id="enableVoice"
+          checked={isVoiceEnabled}
+          onChange={(event) => setIsVoiceEnabled(event.target.checked)}
+          className="h-6 w-6 text-blue-500 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <label htmlFor="enableVoice" className="ml-3 text-lg font-semibold text-gray-700">
+          DJ 멘트 듣기
+        </label>
       </div>
-    </>    
+      {isVoiceEnabled && (
+        <div className="mb-6">
+          <label htmlFor="voice" className="block text-lg font-semibold text-gray-700 mb-2">
+            DJ 목소리 선택
+          </label>
+          {voiceSelect}
+        </div>
+      )}
+    </div>
   );
 }

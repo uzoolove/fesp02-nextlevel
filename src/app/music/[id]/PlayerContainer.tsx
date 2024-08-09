@@ -13,6 +13,7 @@ import Player from '@/app/music/[id]/Player';
 import { isTimeInRange } from '@/utils/time';
 import { getCurrentIndexStorage, getCurrentIndexDJStorage, getCurrentTimeStorage, getCurrentTimeDJStorage, setCurrentIndexStorage, setCurrentIndexDJStorage, setCurrentTimeStorage, setCurrentTimeDJStorage } from '@/utils/storage';
 import { useQuery } from '@tanstack/react-query';
+import PlayHistory from './PlayHistory';
 
 type Timer = {
   start: string,
@@ -263,12 +264,14 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
     <>
       { data && (
         <>
+          <p className='pb-8'>자동 재생 설정: 크롬 설정 &gt; 개인 정보 보호 및 보안 &gt; 사이트 설정 &gt; 추가 콘텐츠 설정 &gt; 소리 &gt; 사이트에서 소리를 재생할 수 있음 체크하고 소리 재생이 허용됨 목록의 추가 버튼 눌러서 접속 주소(예 next-level-two.vercel.app) 등록</p>
           <Player setPlayer={setPlayer} />
           <Speak />
           <PlayList id={id} play={play} djPlayList={djChoice} />
+          <PlayHistory />
         </>
       ) }
-      <p>자동 재생 설정: 크롬 설정 &gt; 개인 정보 보호 및 보안 &gt; 사이트 설정 &gt; 추가 콘텐츠 설정 &gt; 소리 &gt; 사이트에서 소리를 재생할 수 있음 체크하고 소리 재생이 허용됨 목록의 추가 버튼 눌러서 접속 주소(예 next-level-two.vercel.app) 등록</p>
+      
     </>
   );
 }

@@ -35,7 +35,7 @@ export default function PlayList({ id, play, djPlayList }: Params) {
   };
 
   return (
-    <div className="flex w-full mt-4">
+    <div className="flex w-full">
       { [djPlayList, userPlayList].map((playList, index) => (
         <div key={index} className="w-1/2 px-2 mb-6">
           <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">

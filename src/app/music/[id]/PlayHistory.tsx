@@ -9,7 +9,7 @@ export default function PlayHistory() {
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg mb-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">재생 내역</h1>
+      <h1 className="text-lg font-bold mb-4 text-gray-800">재생 내역</h1>
       <ul className="space-y-4">
         {playHistory.map((item, index) => (
           <li key={index} className="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm">
@@ -17,7 +17,7 @@ export default function PlayHistory() {
               <span className="text-xl">🎵</span>
             </div>
             <div className="ml-4">
-              <h2 className="text-lg font-semibold text-gray-800">{item.title}</h2>
+              <h2 className="text-sm text-gray-800">{item.title}</h2>
               <p className="text-gray-400 text-sm">{item.timestamp}</p>
             </div>
           </li>
