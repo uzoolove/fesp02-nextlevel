@@ -157,7 +157,9 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       startTimer.push(setTimeout(() => {
         console.log('음악 재생', player);
         player?.playVideo();
-      }, startDelay));  
+      }, startDelay));
+
+      console.log(`재생 등록 ${startDelay/1000/60} 분`);
       
       const nextFinishInvocation = finishInterval.next().toDate();
       const finishDelay = nextFinishInvocation.getTime() - now.getTime();
