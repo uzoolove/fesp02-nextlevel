@@ -10,8 +10,7 @@ type Params = {
 };
 
 export default function PlayList({ id, play, djPlayList }: Params) {
-  console.log('playList',  id, djPlayList);
-  
+ 
   const { data: userPlayList } = useQuery<MusicComment[], Error, MusicComment[]>({
     queryKey: ['music', id],
     queryFn: () => {

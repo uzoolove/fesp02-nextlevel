@@ -21,8 +21,8 @@ type Timer = {
 
 const playTime: Timer[] = [
   // {
-  //   start: '10 17 * * *',
-  //   finish: '56 17 * * *'
+  //   start: '54 14 * * *',
+  //   finish: '55 14 * * *'
   // },
   {
     start: '20 10 * * *',
@@ -76,6 +76,18 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
 
   const { addPlayHistory, setUtterance } = useMusicStore();
 
+
+  const djChoice = item.videoInfoList || [];
+  const { data } = useQuery<MusicComment[], Error, MusicComment[]>({
+    queryKey: ['music', id],
+    queryFn: () => {
+      return fetchComments<MusicComment>(id);
+    },
+    select: (data) => data.filter(item => item.videoId),
+    refetchInterval: 1000*10,
+  });
+
+  console.log('data', data);
   // 재생 종료시 다음곡 재생
   useEffect(() => {
     if(player?.g){ // g: iframe 객체(g가 null인 경우도 있어서 추가)
@@ -107,7 +119,17 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       
       player.addEventListener('onStateChange', onStateChange);
 
-      initPlay();
+      // 최초 로딩 시 동영상을 재생하거나 준비상태로 만듬
+      // 재생 시간 안에 있을 경우 바로 재생
+      if(playTime.some(time => isTimeInRange(time.start, time.finish))){
+        play(getCurrentIndexStorage(), getCurrentTimeStorage());
+      }else{
+        if(data){
+          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId || djChoice[getCurrentIndexDJStorage()].videoId,
+            startSeconds: getCurrentTimeStorage()
+          });
+        }
+      }
 
       
       // 컴포넌트 언마운트 시 이벤트 정리
@@ -152,30 +174,9 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
     };
   }, []);
 
-  // 최초 로딩 시 동영상을 재생하거나 준비상태로 만듬
-  const initPlay = () => {
-    // 재생 시간 안에 있을 경우 바로 재생
-    if(playTime.some(time => isTimeInRange(time.start, time.finish))){
-      play(getCurrentIndexStorage(), getCurrentTimeStorage());
-    }else{
-      if(data){
-        player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId,
-          startSeconds: getCurrentTimeStorage()
-        });
-      }      
-    }
-  };
+  
 
-  const djChoice = item.videoInfoList || [];
-  const { data } = useQuery<MusicComment[], Error, MusicComment[]>({
-    queryKey: ['music', id],
-    queryFn: () => {
-      return fetchComments<MusicComment>(id);
-    },
-    select: (data) => data.filter(item => item.videoId),
-    refetchInterval: 1000*10,
-  });
-
+  
   useEffect(() => {
     if(data){
       dataRef.current = data;
