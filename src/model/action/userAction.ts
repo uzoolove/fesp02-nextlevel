@@ -1,4 +1,8 @@
-import { ApiResWithValidation, FileRes, MultiItem, SingleItem, UserData, UserForm, UserLoginForm } from "@/types";
+'use server';
+
+import { ApiResWithValidation, CoreErrorRes, FileRes, MultiItem, SingleItem, UserData, UserForm, UserLoginForm } from "@/types";
+import { signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
@@ -19,7 +23,7 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
     const fileRes = await fetch(`${SERVER}/files`, {
       method: 'POST',
       headers: {
-        'client-id': '00-next-level'
+        'client-id': process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID
       },
       body: formData,
     });
@@ -35,7 +39,7 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
   const res = await fetch(`${SERVER}/users`, {
     method: 'POST',
     headers: {
-      'client-id': '00-next-level',
+      'client-id': process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(userObj)
@@ -44,11 +48,24 @@ export async function signup(formData: FormData): Promise<ApiResWithValidation<S
   return res.json();
 }
 
+export async function signInWithCredentials(loginData: UserLoginForm): Promise<ApiResWithValidation<SingleItem<UserForm>, UserLoginForm>> {
+  try{
+    const result = await signIn('credentials', { ...loginData, redirect: false, redirectTo: '/movies' });
+    console.log('signInWithCredentials 로그인한 결과', result);
+  }catch(err){
+    console.error(err);
+    if(err instanceof Error){
+      return err.cause as CoreErrorRes;
+    }
+  }
+  redirect('/');
+}
+
 export async function login(userObj: UserLoginForm): Promise<ApiResWithValidation<SingleItem<UserData>, UserLoginForm>> {
   const res = await fetch(`${SERVER}/users/login`, {
     method: 'POST',
     headers: {
-      'client-id': '00-next-level',
+      'client-id': process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID,
       'Content-type': 'application/json'
     },
     body: JSON.stringify(userObj),

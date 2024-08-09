@@ -2,6 +2,7 @@
 // 주로 Node.js 환경 변수 타입을 정의할 때 사용
 declare namespace NodeJS {
   interface ProcessEnv {
+    NEXT_PUBLIC_API_SERVER_CLIENT_ID: string;
     NEXT_PUBLIC_API_SERVER: string;
     NEXT_PUBLIC_NEXT_SERVER: string;
     NEXT_PUBLIC_LIST_LIMIT: string;

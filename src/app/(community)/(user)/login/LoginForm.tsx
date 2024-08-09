@@ -2,7 +2,7 @@
 
 import InputError from "@/components/InputError";
 import Submit from "@/components/Submit";
-import { signInWithCredentials } from "@/model/action/authAction";
+import { signInWithCredentials } from "@/model/action/userAction";
 import { UserForm, UserLoginForm } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ export default function LoginForm() {
     // 프로그래밍 방식으로 서버액션 호출
     // 로그인 성공시 리턴값 없음
     const resData = await signInWithCredentials(loginData);
+    console.log(resData);
     if(!resData){
       alert(`로그인 되었습니다.`);
       // router.push('/');

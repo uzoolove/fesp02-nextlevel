@@ -22,7 +22,7 @@ export default function RequestSongItem({ item }: { item: MusicComment }){
       <div className="flex justify-between items-center mb-2">
         <form action="#">
           <pre className="whitespace-pre-wrap text-sm mb-2">{ item.content }</pre>
-          <p className="mb-2">신청곡: { item.extra?.title || item.videoId }</p>
+          <p className="mb-2">{ item.extra?.title && '신청곡: ' + item.extra?.title }</p>
           <Submit bgColor="red" size="sm">삭제</Submit>
         </form>
       </div>

@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { type: string, id: str
   return (
     <main className="container mx-auto mt-4 px-4">
 
-      <InfoForm id={params.id} type={params.type} item={item} />
+      <InfoForm id={params.id} item={item} />
 
       <CommentList type={params.type} id={params.id} />
 

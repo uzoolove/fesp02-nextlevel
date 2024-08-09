@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SessionProvider } from "next-auth/react";
+import ReactQueryProviders from "@/hooks/useReactQuery";
 
 export const metadata: Metadata = {
   // url 관련 metadata 설정시 사용될 기본 경로 지정
@@ -35,11 +36,13 @@ export default function RootLayout({
       <body>
         <div id="root">
           <div className="flex flex-col min-h-screen dark:bg-gray-700 dark:text-gray-200 transition-color duration-500 ease-in-out">
-            <SessionProvider>
-              <Header />
-              { children }
-              <Footer />
-            </SessionProvider>
+            <ReactQueryProviders>
+              <SessionProvider>
+                <Header />
+                { children }
+                <Footer />
+              </SessionProvider>
+            </ReactQueryProviders>
           </div>
         </div>
       </body>

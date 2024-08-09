@@ -1,11 +1,10 @@
+import { MusicComment } from "./music";
 import { ReplyUser } from "./user"
 
 export interface PostComment {
   _id: number,
-  user_id: number,
   user: ReplyUser,
   content: string,
-  like: number,
   // videoId?: string,
   extra?: Record<string, any>,
   createdAt: string,
@@ -25,4 +24,8 @@ export interface Post {
   updatedAt: string,
 }
 
+export type MusicType = Pick<Post, 'title' | 'content'> & {
+  musicList?: string,
+  videoInfoList?: MusicComment[]
+};
 

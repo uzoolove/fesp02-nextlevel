@@ -1,7 +1,4 @@
-import Submit from "@/components/Submit";
-import { signInWithCredentials } from "@/model/action/authAction";
 import { Metadata } from "next";
-import Link from "next/link";
 import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {

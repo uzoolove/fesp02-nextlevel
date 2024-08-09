@@ -9,7 +9,7 @@ export default async function customFetch(url: string, options: CustomFetchOptio
   const defaultHeaders: Record<string, string> = {
     'Authorization': `Bearer ${session?.accessToken}`,
     'Content-Type': 'application/json',
-    'client-id': process.env.API_SERVER_CLIENT_ID || ''
+    'client-id': process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID || ''
   };
 
   // 기존 옵션의 헤더와 병합

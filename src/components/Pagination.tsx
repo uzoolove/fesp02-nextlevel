@@ -1,19 +1,39 @@
 'use client';
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
-export default function Pagination() {
+interface PaginationProps {
+  page: number;
+  totalPages: number;
+}
+
+const Pagination: React.FC<PaginationProps> = ({ page, totalPages }) => {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const pageList = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(i));
+    const search = newSearchParams.toString();
+
+    pageList.push(
+      <li
+        key={i}
+        className={page === i ? 'font-bold text-blue-700' : ''}
+      >
+        <Link href={`/${params.type}?${search}`}>{i}</Link>
+      </li>,
+    );
+  }
+
   return (
     <div>
       <ul className="flex justify-center gap-3 m-4">
-        <li className="font-bold text-blue-700">
-          <Link href={`/${params.type}?page=1`}>1</Link>
-        </li>
-        <li>
-          <Link href={`/${params.type}?page=2`}>2</Link>
-        </li>
+        {pageList}
       </ul>
     </div>
   );
 }
+
+export default Pagination;

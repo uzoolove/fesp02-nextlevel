@@ -22,10 +22,14 @@ export function generateMetadata({ params }: { params: { type: string } }): Meta
   };
 }
 
-export default async function Page({ params }: { params: { type: string } }) {
-  const data = await fetchPosts(params.type);
-  console.log(params.type, data)
-  const list = data.map(item => <ListItem key={item._id} item={item} />);
+type Params = { 
+  params: { type: string }, 
+  searchParams: { page: string, keyword: string } 
+};
+
+export default async function Page({ params, searchParams }: Params) {
+  const data = await fetchPosts(params.type, searchParams.page, searchParams.keyword);
+  const list = data.ok && data.item.map(item => <ListItem key={item._id} item={item} />);
 
   return (
     <main className="min-w-80 p-10">
@@ -62,8 +66,8 @@ export default async function Page({ params }: { params: { type: string } }) {
         </table>
         <hr />
 
-        <Pagination />
-
+        { data.ok && <Pagination {...data.pagination}/> }
+        
       </section>
     </main>
   );

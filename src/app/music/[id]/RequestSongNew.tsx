@@ -1,34 +1,31 @@
 'use client';
 
-import Button from "@/components/Button";
 import InputError from "@/components/InputError";
 import Submit from "@/components/Submit";
 import { addComment } from "@/model/action/postAction";
 import { MusicComment } from "@/types";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { fetchVideoInfo } from '@/model/fetch/postFetch';
 
 export default function RequestSongNew({ id }: { id: string } ) {
   const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<MusicComment>();
 
-  const fetchVideoInfo = async (videoId: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_NEXT_SERVER}/api/youtube?videoId=${videoId}`);
-    return res.json();
-  };
-
   const handleAdd = async (commentObj: MusicComment) => {
-    commentObj.videoId = commentObj.videoId.slice(-11);
-    const res = await fetchVideoInfo(commentObj.videoId);
-    if(res.data){
-      commentObj.extra = res.data;
-      addComment(id, commentObj);
-      router.refresh();
-    }else{
-      alert('동영상이 없습니다.');
-      return false;
+    if(commentObj.videoId){
+      commentObj.videoId = commentObj.videoId.slice(-11);
+      const res = await fetchVideoInfo(commentObj.videoId);
+      if(res.data){
+        commentObj.extra = res.data;
+      }else{
+        alert('유튜브에 동영상이 없습니다.');
+        return false;
+      }
     }
+    addComment(id, commentObj);
+    router.refresh();
   };
 
   return (
@@ -45,7 +42,7 @@ export default function RequestSongNew({ id }: { id: string } ) {
               placeholder="유튜브 URL이나 ID를 입력하세요"
               className="w-96 px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-400 dark:bg-gray-700"
               { ...register('videoId', {
-                required: '유튜브 URL이나 비디오 ID를 입력하세요.',
+                // required: '유튜브 URL이나 비디오 ID를 입력하세요.',
                 pattern: {
                   value: /^(https:\/\/www\.youtube\.com\/watch\?v=)?[A-Za-z0-9_-]{11}$/,
                   message: '유튜브 형식이 아닙니다.'
@@ -68,7 +65,7 @@ export default function RequestSongNew({ id }: { id: string } ) {
             <InputError target={ errors.content } />
           
         </div>
-        <Submit size="sm">댓글 등록</Submit>
+        <Submit size="sm">신청</Submit>
       </form>
     </div>
   );
