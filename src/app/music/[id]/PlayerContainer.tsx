@@ -71,17 +71,10 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
 
   const [player, setPlayer] = useState<YouTubePlayer>();
   const dataRef = useRef<MusicComment[]>([]);
-  // const [musicList, setMusicList] = useState<VideoType[]>();
-  // const [currentIndex, setCurrentIndex] = useState<number>();
 
   const playListSource = useRef<'reply' | 'dj'>('reply');
 
   const { addPlayHistory, setUtterance } = useMusicStore();
-
-  // useEffect(() => {
-  //   // 스토리지는 클라이언트 컴포넌트에서만 사용 가능하므로 useEffect 안에서 사용
-  //   setCurrentIndex(getCurrentIndexStorage());
-  // }, []);
 
   // 재생 종료시 다음곡 재생
   useEffect(() => {
@@ -162,67 +155,18 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
   // 최초 로딩 시 동영상을 재생하거나 준비상태로 만듬
   const initPlay = () => {
     // 재생 시간 안에 있을 경우 바로 재생
-    if(/*musicList[getCurrentIndex()] &&*/ playTime.some(time => isTimeInRange(time.start, time.finish))){
+    if(playTime.some(time => isTimeInRange(time.start, time.finish))){
       play(getCurrentIndexStorage(), getCurrentTimeStorage());
     }else{
-      // setTimeout(() => {
-        if(data){
-          console.log('동영상 로딩ㅇㅇㅇㅇㅇㅇㅇㅇㅇ', dataRef.current[getCurrentIndexStorage()], getCurrentTimeStorage());
-          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId,
-            startSeconds: getCurrentTimeStorage()
-          });
-        }
-      // }, 5000);
-      
+      if(data){
+        player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId,
+          startSeconds: getCurrentTimeStorage()
+        });
+      }      
     }
   };
 
-// E0C-tN9QJ3Q,iSwxR-eO0QM, wq4HlLqYyRY, AaXaig_43lU,iqu132vTl5Y,atz_aZA3rf0,CGxUd7kjnuA
-
   const djChoice = item.videoInfoList || [];
-
-  console.log(item);
-  // const djChoice: MusicComment[] = [{
-  //   _id: 1,
-  //   videoId: 'ax1csKKQnns',
-  //   content: '아이유 좋아요',
-  //   extra: {
-  //     title: "IU 'Love wins all' Live Clip (2024 IU WORLD TOUR CONCERT IN SEOUL)"
-  //   },
-  //   user: {
-  //     _id: 2,
-  //     name: 'DJ yong',
-  //   },
-  //   createdAt:'',
-  //   updatedAt: '',
-  // }, {
-  //   _id: 2,
-  //   videoId: '0-q1KafFCLU',
-  //   content: '아이유 Celebrity 부탁해요.',
-  //   extra: {
-  //     title: "[MV] IU(아이유) _ Celebrity"
-  //   },
-  //   user: {
-  //     _id: 3,
-  //     name: '나무',
-  //   },
-  //   createdAt:'',
-  //   updatedAt: '',
-  // }, {
-  //   _id: 3,
-  //   videoId: 'kHW-UVXOcLU',
-  //   content: '이달 월급 들어오면 쇼핑해야지.',
-  //   extra: {
-  //     title: "IU 'Shopper' MV"
-  //   },
-  //   user: {
-  //     _id: 4,
-  //     name: '하루',
-  //   },
-  //   createdAt:'',
-  //   updatedAt: '',
-  // }];
-
   const { data } = useQuery<MusicComment[], Error, MusicComment[]>({
     queryKey: ['music', id],
     queryFn: () => {
@@ -245,11 +189,8 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
     if(player){
       const currentTime = player.getCurrentTime();  // 현재 재생 시간을 초 단위로 반환
       if(djChoice.find(music => music.videoId === player.getVideoData().video_id)){ // DJ 선곡 재생중일 경우
-        // console.log('디제이 선곡 재생중...', currentTime);
-        // window.sessionStorage.setItem('djCurrentTime', currentTime);
         setCurrentTimeDJStorage(currentTime);
       }else{
-        // window.sessionStorage.setItem('currentTime', currentTime);
         setCurrentTimeStorage(currentTime);
       }
     }
@@ -285,10 +226,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       }else{
         playListSource.current = 'reply';
         nextMusic = dataRef.current[index];
-        // setCurrentIndex(index);
         setCurrentIndexStorage(index);
-        // setCurrentTimeStorage(startSeconds);
-        // setCurrentTime(0);
       }
  
       console.log('nextMusic', nextMusic);
