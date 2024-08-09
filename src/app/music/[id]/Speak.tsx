@@ -41,7 +41,7 @@ export default function Voice() {
         utterance.callback && utterance.callback();
       }
     }
-  }, [utterance, voices]);
+  }, [utterance]);
 
   
   

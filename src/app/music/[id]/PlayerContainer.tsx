@@ -240,7 +240,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       const name = nextMusic.user.name;
       const msg = nextMusic.content || nextMusic.content;
 
-      const comment = `${ msg ? name + '님의 사연입니다.' : name + '님의 신청곡입니다.' } ${ msg }`;
+      const comment = `${ msg ? name + '님의 사연입니다.' : (name && name + '님의 신청곡입니다.') } ${ msg }`;
       const utterance = {
         text: comment,
         callback: () => {
