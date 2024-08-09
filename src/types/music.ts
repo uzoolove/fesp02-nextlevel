@@ -1,4 +1,4 @@
-import { PostComment } from "./post";
+import { Post, PostComment } from "./post";
 
 export interface PlayHistory {
   post_id: string,
@@ -9,3 +9,9 @@ export interface PlayHistory {
 export interface MusicComment extends PostComment{
   videoId: string
 }
+
+export type MusicType = Pick<Post, 'title' | 'content'> & {
+  musicList?: string,
+  videoInfoList?: MusicComment[]
+};
+

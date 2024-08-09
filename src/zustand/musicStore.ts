@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { PlayHistory, VideoType } from '../types'
+import { PlayHistory, MusicType } from '../types'
 
 type MusicStore = {
-  musicList: VideoType[],
+  musicList: MusicType[],
   currentIndex: number,
   currentTime: number,
   djCurrentIndex: number,
@@ -14,8 +14,8 @@ type MusicStore = {
     text: string,
     callback?: () => void,
   },
-  setMusicList: (musicList: VideoType[]) => void;
-  addMusic: (music: VideoType) => void;
+  setMusicList: (musicList: MusicType[]) => void;
+  addMusic: (music: MusicType) => void;
   deleteMusic: (index: number) => void;
   setCurrentIndex: (index: number) => void;
   setCurrentTime: (time: number) => void;

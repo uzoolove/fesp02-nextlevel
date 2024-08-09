@@ -24,8 +24,3 @@ export interface Post {
   updatedAt: string,
 }
 
-export type MusicType = Pick<Post, 'title' | 'content'> & {
-  musicList?: string,
-  videoInfoList?: MusicComment[]
-};
-
