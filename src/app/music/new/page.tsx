@@ -1,20 +1,20 @@
 import { Metadata } from "next";
 import PostForm from "./MusicForm";
 
-export function generateMetadata({ params }: { params: { type: string } }): Metadata {
-  const boardName = params.type;
+export function generateMetadata(): Metadata {
+  const boardName = '음악 신청';
   return {
     title: `${boardName} - DJ 게시글 등록`,
     description: `${boardName} - DJ 게시글을 등록하세요.`,
     openGraph: {
       title: `${boardName} - DJ 게시글 등록`,
       description: `${boardName} - DJ 게시글을 등록하세요.`,
-      url: `/${params.type}/new`
+      url: `/music/new`
     }
   };
 }
 
-export default function Page({ params }: { params: { type: string } }) {
+export default function Page() {
 
   return (
     <main className="min-w-[320px] p-4">

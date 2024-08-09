@@ -123,7 +123,7 @@ export default function PostForm (){
       <hr />
       <div className="flex justify-end my-6">
         <Submit>등록</Submit>
-        <Link href={`/${params.type}`} className="bg-gray-900 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded">취소</Link>
+        <Link href={`/music`} className="bg-gray-900 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded">취소</Link>
       </div>
     </form>
   );
