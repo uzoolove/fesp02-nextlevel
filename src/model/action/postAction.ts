@@ -2,7 +2,7 @@
 
 import { ApiRes, CoreRes, SingleItem, Post, PostComment, MusicType, MusicComment } from "@/types/index";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchVideoInfo } from "../fetch/postFetch";
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
@@ -13,36 +13,34 @@ export async function addPost(formData: FormData): Promise<ApiRes<SingleItem<Pos
   const session = await auth();
   console.log('session', session);
   const postData = {
-    type: formData.get('type') || 'info',
+    type: formData.get('type'),
     title: formData.get('title'),
     content: formData.get('content'),
   }
 
-  const musicList = formData.get('musicList') as string;
-  if(musicList){
-    const videoInfoPromise = musicList.split(',').map(async (videoId, index) => {
-      const res = await fetchVideoInfo(videoId.trim());
-      return {
-        _id: index + 1,
-        videoId: videoId.trim(),
-        extra: {
-          title: res.data.title
-        },
-        createdAt: '',
-        updatedAt: '',
-        user: {
-          _id: Number(session?.user?.id),
-          name: '',
-        },
-        content: ''
-      };
-    });
-    const videoInfoList: MusicComment[] = await Promise.all(videoInfoPromise);
-    console.log(videoInfoList);
-    (postData as MusicType).videoInfoList = videoInfoList;
-
-
-    // (postData as MusicType).musicList = formData.get('musicList') as string;
+  if(postData.type === 'music'){
+    const musicList = formData.get('musicList') as string;
+    if(musicList){
+      const videoInfoPromise = musicList.split(',').map(async (videoId, index) => {
+        const res = await fetchVideoInfo(videoId.trim());
+        return {
+          _id: index + 1,
+          videoId: videoId.trim(),
+          extra: {
+            title: res.data.title
+          },
+          createdAt: '',
+          updatedAt: '',
+          user: {
+            _id: Number(session?.user?.id),
+            name: '',
+          },
+          content: ''
+        };
+      });
+      const videoInfoList: MusicComment[] = await Promise.all(videoInfoPromise);
+      (postData as MusicType).videoInfoList = videoInfoList;
+    }
   }
 
   const res = await fetch(`${SERVER}/posts`, {
@@ -56,7 +54,12 @@ export async function addPost(formData: FormData): Promise<ApiRes<SingleItem<Pos
   });
   
   // 목록 조회한 캐시 삭제
-  revalidatePath('/posts');
+  // revalidatePath('/posts');
+
+  if(typeof postData.type === 'string'){
+    revalidateTag(postData.type);
+  }
+  
   return res.json();
 }
 

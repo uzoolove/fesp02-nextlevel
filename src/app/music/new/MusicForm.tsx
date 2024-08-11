@@ -3,16 +3,13 @@
 import InputError from "@/components/InputError";
 import Submit from "@/components/Submit";
 import { addPost } from "@/model/action/postAction";
-import { fetchVideoInfo } from "@/model/fetch/postFetch";
 import { MusicType } from "@/types";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function PostForm (){
 
-  const params = useParams();
   const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm<MusicType>();
 
@@ -23,41 +20,6 @@ export default function PostForm (){
     postForm.append('title', postObj.title);
     postForm.append('content', postObj.content);
     postObj.musicList && postForm.append('musicList', postObj.musicList);
-
-  
-  //   if(postObj.musicList){
-  //     const videoInfoPromise = postObj.musicList.split(',').map(async (videoId, index) => {
-  //       const res = await fetchVideoInfo(videoId.trim());
-  //       return {
-  //         _id: index + 1,
-  //         videoId,
-  //         extra: {
-  //           title: res.data.title
-  //         }
-  //       };
-  //     });
-  //     const videoInfoList = await Promise.all(videoInfoPromise);
-  //     console.log(videoInfoList);
-
-  //     // {
-  //     //   _id: 1,
-  //     //   videoId: 'ax1csKKQnns',
-  //     //   content: '아이유 좋아요',
-  //     //   extra: {
-  //     //     title: "IU 'Love wins all' Live Clip (2024 IU WORLD TOUR CONCERT IN SEOUL)"
-  //     //   },
-  //     //   user: {
-  //     //     _id: 2,
-  //     //     name: 'DJ yong',
-  //     //   },
-  //     //   createdAt:'',
-  //     //   updatedAt: '',
-  //     // }
-
-  //   }
-    
-    
-  //   // // Object.entries(postObj).forEach(([key, value]) => postForm.append(key, value as string));
 
     // 프로그래밍 방식으로 서버액션 호출
     const resData = await addPost(postForm);

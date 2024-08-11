@@ -17,10 +17,14 @@ export async function fetchPosts(
   LIMIT && params.set('limit', LIMIT);
   DELAY && params.set('delay', DELAY);
   const url = `${SERVER}/posts?${params.toString()}`;
+  const tags = ['posts'];
+  if(type) tags.push(type);
+
   const res = await fetch(url, {
     headers: {
       'client-id': CLIENT_ID
     },
+    next: { tags }
   });
   const resJson = await res.json();
   return resJson;

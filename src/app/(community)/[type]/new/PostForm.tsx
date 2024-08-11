@@ -17,6 +17,7 @@ export default function PostForm (){
 
   const onSubmit = async (postObj: Post) => {
     const postForm = new FormData();
+    postForm.append('type', params.type as string);
     Object.entries(postObj).forEach(([key, value]) => postForm.append(key, value as string));
 
     // 프로그래밍 방식으로 서버액션 호출
