@@ -72,3 +72,11 @@ export async function login(userObj: UserLoginForm): Promise<ApiResWithValidatio
   });
   return res.json();
 }
+
+export async function signInWithGoogle(formData: FormData){
+  await signIn('google', { redirectTo: '/' });
+}
+
+export async function signInWithGithub(formData: FormData){
+  await signIn('github', { redirectTo: '/' });
+}

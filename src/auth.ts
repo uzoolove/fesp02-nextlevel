@@ -4,6 +4,8 @@ import { login } from './model/action/userAction';
 import { ApiRes, RefreshTokenRes, UserForm, UserLoginForm, ValidationErrorRes } from './types';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { fetchAccessToken } from './model/fetch/userFetch';
+import github from "next-auth/providers/github";
+import google from "next-auth/providers/google";
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
@@ -36,6 +38,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new CredentialsSignin(resJson.message, { cause: resJson });
         }
       }
+    }),
+    github({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     })
   ],
   session: {
@@ -270,3 +280,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 
 */
+
+

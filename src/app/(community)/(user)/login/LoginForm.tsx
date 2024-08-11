@@ -1,9 +1,11 @@
 'use client';
 
+import Button from "@/components/Button";
 import InputError from "@/components/InputError";
 import Submit from "@/components/Submit";
-import { signInWithCredentials } from "@/model/action/userAction";
+import { signInWithCredentials, signInWithGithub, signInWithGoogle } from "@/model/action/userAction";
 import { UserForm, UserLoginForm } from "@/types";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -30,7 +32,7 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={ handleSubmit(login) }>
+    <form>
       <div className="mb-4">
         <label className="block text-gray-700 dark:text-gray-200 mb-2" htmlFor="email">이메일</label>
         <input
@@ -64,6 +66,14 @@ export default function LoginForm() {
       </div>
       <div className="mt-10 flex justify-center items-center">
         <Submit>로그인</Submit>
+        <Submit formAction={signInWithGithub}>깃허브</Submit>
+        <Submit formAction={signInWithGoogle}>구글</Submit>
+        <Image src="/images/login/web_neutral_rd_na@2x.png"
+          width={40}
+          height={40}
+          alt="네이버 로그인"
+          className="cursor-pointer"
+          />
         <Link href="/signup" className="ml-8 text-gray-800 hover:underline">회원가입</Link>
       </div>
     </form>

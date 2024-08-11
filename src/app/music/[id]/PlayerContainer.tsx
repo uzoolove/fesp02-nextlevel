@@ -107,9 +107,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
             }else{
               setCurrentTimeStorage(0);
             }
-            
             play(getCurrentIndexStorage() + 1);
-            break;
           case YT.PlayerState.PAUSED: // 2
           case YT.PlayerState.BUFFERING: // 3
           default:
@@ -126,7 +124,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
         play(getCurrentIndexStorage(), getCurrentTimeStorage());
       }else{
         if(data){
-          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId || djChoice[getCurrentIndexDJStorage()].videoId,
+          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId || djChoice[getCurrentIndexDJStorage()]?.videoId,
             startSeconds: getCurrentTimeStorage()
           });
         }
