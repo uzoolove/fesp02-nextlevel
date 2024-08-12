@@ -283,7 +283,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
           <Player setPlayer={setPlayer} />
           <Speak />
           <PlayList id={id} play={play} djPlayList={djChoice} />
-          <PlayHistory />
+          <PlayHistory id={id} />
         </>
       ) }
       
