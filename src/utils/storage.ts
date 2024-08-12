@@ -6,34 +6,46 @@ export const getObject = (key: string) => {
   return JSON.parse(localStorage.getItem(key) || '{}');
 };
 
-export const setCurrentTimeStorage = (time: number) => {
-  return localStorage.setItem('currentTime', String(time));
+export const setCurrentTimeStorage = (id: string, time: number) => {
+  const post = getObject(id);
+  post.currentTime = time;
+  return setObject(id, post);
 }
 
-export const getCurrentTimeStorage = () => {
-  return Number(localStorage.getItem('currentTime') || 0);
+export const getCurrentTimeStorage = (id: string) => {
+  const post = getObject(id);
+  return post.currentTime || 0;
 }
 
-export const setCurrentIndexStorage = (index: number) => {
-  return localStorage.setItem('currentIndex', String(index));
+export const setCurrentIndexStorage = (id: string, index: number) => {
+  const post = getObject(id);
+  post.currentIndex = index;
+  return setObject(id, post);
 }
 
-export const getCurrentIndexStorage = () => {
-  return Number(localStorage.getItem('currentIndex') || 0);
+export const getCurrentIndexStorage = (id: string) => {
+  const post = getObject(id);
+  return post.currentIndex || 0;
 }
 
-export const setCurrentTimeDJStorage = (time: number) => {
-  return localStorage.setItem('currentTimeDJ', String(time));
+export const setCurrentTimeDJStorage = (id: string, time: number) => {
+  const post = getObject(id);
+  post.currentTimeDJ = time;
+  return setObject(id, post);
 }
 
-export const getCurrentTimeDJStorage = () => {
-  return Number(localStorage.getItem('currentTimeDJ') || 0);
+export const getCurrentTimeDJStorage = (id: string) => {
+  const post = getObject(id);
+  return post.currentTimeDJ || 0;
 }
 
-export const setCurrentIndexDJStorage = (index: number) => {
-  return localStorage.setItem('currentIndexDJ', String(index));
+export const setCurrentIndexDJStorage = (id: string, index: number) => {
+  const post = getObject(id);
+  post.currentIndexDJ = index;
+  return setObject(id, post);
 }
 
-export const getCurrentIndexDJStorage = () => {
-  return Number(localStorage.getItem('currentIndexDJ') || 0);
+export const getCurrentIndexDJStorage = (id: string) => {
+  const post = getObject(id);
+  return post.currentIndexDJ || 0;
 }
