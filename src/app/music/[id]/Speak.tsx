@@ -5,9 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Voice() {
   const utterance = useMusicStore((state) => state.utterance);
-  const voiceName = useMusicStore((state) => state.voiceName);
-  const setVoiceName = useMusicStore((state) => state.setVoiceName);
-
+  
+  const [voiceName, setVoiceName] = useState<string>(); 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -36,6 +35,7 @@ export default function Voice() {
   useEffect(() => {
     if(utterance){
       if(isVoiceEnabled){
+        console.log('speak', utterance.text);
         speak(utterance.text);
       }else{
         utterance.callback && utterance.callback();
