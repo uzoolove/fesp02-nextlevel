@@ -106,7 +106,6 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
     refetchInterval: 1000*10,
   });
 
-  console.log('data', data);
   // 재생 종료시 다음곡 재생
   useEffect(() => {
     if(player?.g){ // g: iframe 객체(g가 null인 경우도 있어서 추가)
@@ -120,12 +119,12 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
           case YT.PlayerState.ENDED: // 0
             if(playListSource.current==='dj'){
               // dj곡 재생중일 경우 dj index 증가
-              setCurrentIndexDJStorage(getCurrentIndexDJStorage() + 1);
-              setCurrentTimeDJStorage(0);
+              setCurrentIndexDJStorage(id, getCurrentIndexDJStorage(id) + 1);
+              setCurrentTimeDJStorage(id, 0);
             }else{
-              setCurrentTimeStorage(0);
+              setCurrentTimeStorage(id, 0);
             }
-            play(getCurrentIndexStorage() + 1);
+            play(getCurrentIndexStorage(id) + 1);
           case YT.PlayerState.PAUSED: // 2
           case YT.PlayerState.BUFFERING: // 3
           default:
@@ -139,11 +138,11 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       // 최초 로딩 시 동영상을 재생하거나 준비상태로 만듬
       // 재생 시간 안에 있을 경우 바로 재생
       if(playTime.some(time => isTimeInRange(time.start, time.finish))){
-        play(getCurrentIndexStorage(), getCurrentTimeStorage());
+        play(getCurrentIndexStorage(id), getCurrentTimeStorage(id));
       }else{
         if(data){
-          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage()]?.videoId || djChoice[getCurrentIndexDJStorage()]?.videoId,
-            startSeconds: getCurrentTimeStorage()
+          player.cueVideoById({videoId: dataRef.current[getCurrentIndexStorage(id)]?.videoId || djChoice[getCurrentIndexDJStorage(id)]?.videoId,
+            startSeconds: getCurrentTimeStorage(id)
           });
         }
       }
@@ -171,17 +170,13 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       const startDelay = nextStartInvocation.getTime() - now.getTime();
 
       startTimer.push(setTimeout(() => {
-        console.log('음악 재생', playerRef.current);
         playerRef.current?.playVideo();
       }, startDelay));
-
-      console.log(`재생 등록 ${startDelay/1000/60} 분`);
       
       const nextFinishInvocation = finishInterval.next().toDate();
       const finishDelay = nextFinishInvocation.getTime() - now.getTime();
   
       finishTimer.push(setTimeout(() => {
-        console.log('재생 중지');
         playerRef.current?.pauseVideo();
       }, finishDelay));
     });
@@ -213,9 +208,9 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
     if(player){
       const currentTime = player.getCurrentTime();  // 현재 재생 시간을 초 단위로 반환
       if(djChoice.find(music => music.videoId === player.getVideoData().video_id)){ // DJ 선곡 재생중일 경우
-        setCurrentTimeDJStorage(currentTime);
+        setCurrentTimeDJStorage(id, currentTime);
       }else{
-        setCurrentTimeStorage(currentTime);
+        setCurrentTimeStorage(id, currentTime);
       }
     }
   };
@@ -234,26 +229,24 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
 
   // 노래 재생
   const play = (index: number, startSeconds: number = 0, source: 'reply' | 'dj' = 'reply') => {
-    console.log('play()', index, startSeconds, dataRef.current);
 
     if(data && player?.g){
       let nextMusic: MusicComment;
 
       if(source === 'dj' || index >= dataRef.current.length){ // dj 음악을 선택했거나 더이상 재생 목록이 없으면 DJ 음악 재생
         playListSource.current = 'dj';
-        let index = getCurrentIndexDJStorage();
+        let index = getCurrentIndexDJStorage(id);
         if(!index  || index >= djChoice.length){
           index = 0;
         }
         nextMusic = djChoice[index];
-        setCurrentIndexDJStorage(index);
+        setCurrentIndexDJStorage(id, index);
       }else{
         playListSource.current = 'reply';
         nextMusic = dataRef.current[index];
-        setCurrentIndexStorage(index);
+        setCurrentIndexStorage(id, index);
       }
  
-      console.log('nextMusic', nextMusic);
       player?.pauseVideo();
 
       // 코멘트 읽기

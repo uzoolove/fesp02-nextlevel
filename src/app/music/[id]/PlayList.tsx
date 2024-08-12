@@ -20,15 +20,15 @@ export default function PlayList({ id, play, djPlayList }: Params) {
     refetchInterval: 1000*10
   });
 
-  const playIndex = [getCurrentIndexDJStorage(), getCurrentIndexStorage()];
+  const playIndex = [getCurrentIndexDJStorage(id), getCurrentIndexStorage(id)];
    
   const handleClick = (source: 'dj' | 'reply', playList: MusicComment[], reply_id: number) => {
     
     const currentIndex = playList.findIndex(music => music._id === reply_id);
     console.log(playList, reply_id, currentIndex);
     if(source === 'dj'){
-      setCurrentIndexDJStorage(currentIndex);
-      setCurrentTimeDJStorage(0);
+      setCurrentIndexDJStorage(id, currentIndex);
+      setCurrentTimeDJStorage(id, 0);
     }
     
     play(currentIndex, 0, source);
