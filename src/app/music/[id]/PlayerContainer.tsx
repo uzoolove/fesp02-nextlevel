@@ -22,41 +22,57 @@ type Timer = {
 
 const playTime: Timer[] = [
   // {
-  //   start: '54 14 * * *',
-  //   finish: '55 14 * * *'
+  //   start: '46 08 * * *',
+  //   finish: '47 08 * * *'
   // },
-  {
-    start: '20 10 * * *',
-    finish: '30 10 * * *'
-  },
-  {
-    start: '20 11 * * *',
-    finish: '30 11 * * *'
-  },
-  {
-    start: '20 12 * * *',
-    finish: '40 13 * * *'
-  },
-  {
-    start: '30 14 * * *',
-    finish: '40 14 * * *'
-  },
-  {
-    start: '30 15 * * *',
-    finish: '40 15 * * *'
-  },
-  {
-    start: '30 16 * * *',
-    finish: '40 16 * * *'
-  },
-  {
-    start: '30 17 * * *',
-    finish: '40 17 * * *'
-  },
-  {
-    start: '30 18 * * *',
-    finish: '40 18 * * *'
-  },
+
+  // {
+  //   start: '00 10 * * *',
+  //   finish: '10 10 * * *'
+  // },
+  // {
+  //   start: '10 11 * * *',
+  //   finish: '20 11 * * *'
+  // },
+  // {
+  //   start: '20 12 * * *',
+  //   finish: '40 13 * * *'
+  // },
+  
+
+
+  // {
+  //   start: '20 10 * * *',
+  //   finish: '30 10 * * *'
+  // },
+  // {
+  //   start: '20 11 * * *',
+  //   finish: '30 11 * * *'
+  // },
+  // {
+  //   start: '20 12 * * *',
+  //   finish: '40 13 * * *'
+  // },
+  // {
+  //   start: '30 14 * * *',
+  //   finish: '40 14 * * *'
+  // },
+  // {
+  //   start: '30 15 * * *',
+  //   finish: '40 15 * * *'
+  // },
+  // {
+  //   start: '30 16 * * *',
+  //   finish: '40 16 * * *'
+  // },
+  // {
+  //   start: '30 17 * * *',
+  //   finish: '40 17 * * *'
+  // },
+  // {
+  //   start: '30 18 * * *',
+  //   finish: '40 18 * * *'
+  // },
   
   // {
   //   start: '20 10,11,12 * * *',
@@ -71,6 +87,8 @@ const playTime: Timer[] = [
 export default function PlayerContainer({ id, item }: { id: string, item: MusicType }){
 
   const [player, setPlayer] = useState<YouTubePlayer>();
+  const playerRef = useRef<YouTubePlayer>();
+
   const dataRef = useRef<MusicComment[]>([]);
 
   const playListSource = useRef<'reply' | 'dj'>('reply');
@@ -153,8 +171,8 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       const startDelay = nextStartInvocation.getTime() - now.getTime();
 
       startTimer.push(setTimeout(() => {
-        console.log('음악 재생', player);
-        player?.playVideo();
+        console.log('음악 재생', playerRef.current);
+        playerRef.current?.playVideo();
       }, startDelay));
 
       console.log(`재생 등록 ${startDelay/1000/60} 분`);
@@ -164,7 +182,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
   
       finishTimer.push(setTimeout(() => {
         console.log('재생 중지');
-        player?.pauseVideo();
+        playerRef.current?.pauseVideo();
       }, finishDelay));
     });
     
@@ -173,16 +191,20 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       startTimer.forEach(timer => clearTimeout(timer));
       finishTimer.forEach(timer => clearTimeout(timer));
     };
+    
   }, []);
 
   
 
   
   useEffect(() => {
-    if(data){
+    if(data){ // useEffect 내부 함수가 clusure로 인해 null 값인 data를 참조하는 경우 발생
       dataRef.current = data;
     }
-  }, [data]);
+    if(player){
+      playerRef.current = player;
+    }
+  }, [data, player]);
 
   let intervalId: NodeJS.Timeout;
 
