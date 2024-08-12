@@ -5,6 +5,8 @@ const LIMIT = process.env.NEXT_PUBLIC_LIST_LIMIT;
 const DELAY = process.env.NEXT_PUBLIC_DELAY_TIME;
 const CLIENT_ID = process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID;
 
+export const revalidate = 10; // 10초마다 재검증
+
 // 게시물 목록 조회
 export async function fetchPosts(
     type: string | undefined, 
@@ -24,7 +26,7 @@ export async function fetchPosts(
     headers: {
       'client-id': CLIENT_ID
     },
-    next: { 
+    next: {
       tags,
       revalidate: 1000 * 10
     }
