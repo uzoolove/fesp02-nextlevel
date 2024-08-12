@@ -24,7 +24,10 @@ export async function fetchPosts(
     headers: {
       'client-id': CLIENT_ID
     },
-    next: { tags }
+    next: { 
+      tags,
+      revalidate: 1000 * 10
+    }
   });
   const resJson = await res.json();
   return resJson;
@@ -37,6 +40,9 @@ export async function fetchPost(_id: string){
     headers: {
       'client-id': CLIENT_ID
     },
+    next: { 
+      revalidate: 1000 * 10
+    }
   });
   const resJson: ApiRes<SingleItem<Post>> = await res.json();
   if(!resJson.ok){
