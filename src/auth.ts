@@ -1,11 +1,11 @@
+import NextAuth, { CredentialsSignin } from "next-auth";
 import CredentialsProvider from 'next-auth/providers/credentials';
-import NextAuth, { AuthError, CredentialsSignin } from "next-auth";
-import { login } from './model/action/userAction';
-import { ApiRes, RefreshTokenRes, UserForm, UserLoginForm, ValidationErrorRes } from './types';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { fetchAccessToken } from './model/fetch/userFetch';
 import github from "next-auth/providers/github";
 import google from "next-auth/providers/google";
+import { login, loginOAuth, signupWithOAuth } from './model/action/userAction';
+import { OAuthUser, RefreshTokenRes, UserData, UserLoginForm } from './types';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { fetchAccessToken } from './model/fetch/userFetch';
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
@@ -65,15 +65,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // profile: OAuth 제공자가 반환한 사용자 프로필 정보
     // credentials: authorize()에 전달된 로그인 정보(사용자가 입력한 id, password 등)
     async signIn({user, account, profile, credentials, }) {
-      /*
+      /* id/pwd
         callbacks.signIn {
           id: '2',
           email: 's1@market.com',
           name: '네오',
           type: 'seller',
           image: 'http://localhost/files/00-next-level/user-neo.webp',
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoi64Sk7JikIiwiaW1hZ2UiOiIvZmlsZXMvMDAtbmV4dC1sZXZlbC91c2VyLW5lby53ZWJwIiwiaWF0IjoxNzIzMDc4Njk0LCJleHAiOjE3MjMxNjUwOTQsImlzcyI6IkZFU1AifQ.HNWOWlROMq1KEoIqZB5i5bwKOK77O9tuH0h5m8izqVg',
-          refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjMwNzg2OTQsImV4cCI6MTcyNTY3MDY5NCwiaXNzIjoiRkVTUCJ9.fL9lWVPI7ZS59HVgsIL7Fof9b5MaApCirsA_nclg-As'
+          accessToken: '...',
+          refreshToken: '...'
         } {
           providerAccountId: '2',
           type: 'credentials',
@@ -84,46 +84,91 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           callbackUrl: '/movies'
         }
       */
+
+      /* github
+        callbacks.signIn {
+          id: 'b0fcfc5b-2458-4087-b7cb-064647716ff0',
+          name: 'Kilyong Jeong',
+          email: 'uzoolove@gmail.com',
+          image: 'https://avatars.githubusercontent.com/u/7599569?v=4'
+        } {
+          access_token: '...',
+          token_type: 'bearer',
+          scope: 'read:user,user:email',
+          provider: 'github',
+          type: 'oauth',
+          providerAccountId: '7599569'
+        } {
+          login: 'uzoolove',
+          id: 7599569,
+          node_id: 'MDQ6VXNlcjc1OTk1Njk=',
+          ...
+        } undefined
+      */
       console.log('callbacks.signIn', user, account, profile, credentials);
       switch(account?.provider){
         case 'credentials':
           /*
-            {
+            id/pwd 로그인 {
               id: '2',
               email: 's1@market.com',
               name: '네오',
               type: 'seller',
               image: 'https://api.fesp.shop/files/00-sample/user-neo.webp',
-              accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoi64Sk7JikIiwicHJvZmlsZSI6Ii9maWxlcy8wMC1zYW1wbGUvdXNlci1uZW8ud2VicCIsImxvZ2luVHlwZSI6ImVtYWlsIiwiaWF0IjoxNzIxOTUzNDA0LCJleHAiOjE3MjIwMzk4MDQsImlzcyI6IkZFU1AifQ.QXQZjS4_3t_mIAB7AImDnyXAuoooziYoXpplOO1y0zc',
-              refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjE5NTM0MDQsImV4cCI6MTcyNDU0NTQwNCwiaXNzIjoiRkVTUCJ9.oUdRnbvof1UiSKKD--tz-_iaZOXMz5ng7ceiFRgn0iM'
+              accessToken: '...',
+              refreshToken: '...'
             }
           */
-          console.log('로그인 정보', user);
+          console.log('id/pwd 로그인', user);          
           break;
         case 'google':
+        case 'github':
           /*
-            {
+            OAuth 로그인 {
               id: '409716c3-f6d3-4988-bf0e-062d85b3114e',
               name: 'dainhome',
               email: 'homedain01@gmail.com',
               image: 'https://lh3.googleusercontent.com/a/ACg8ocKqRBGG4QfyzlASvT7kARFlFHW7s8tQ6XQ-3fDQD6U7lLsqHQ=s96-c'   
             }
           */
-          console.log('구글 로그인 정보', user);
+          console.log('OAuth 로그인', user);
+
           // DB에서 id를 조회해서 있으면 로그인 처리를 없으면 자동 회원 가입 후 로그인 처리
-          // API 서버에 해당 기능 추가 예정
-          break;
-        case 'github':
-          /*
-            {
-              id: 'b43446d2-6bf5-4a5c-83a6-7574e39df9f5',
-              name: 'Kilyong Jeong',
-              email: 'uzoolove@gmail.com',
-              image: 'https://avatars.githubusercontent.com/u/7599569?v=4'
+          let userInfo: UserData | null = null;
+          try{
+            // 자동 회원 가입
+            const newUser: OAuthUser = {
+              type: 'user',
+              loginType: account.provider,
+              name: user.name || '',
+              email: user.email || '',
+              image: user.image || '',
+              extra: { ...profile, providerAccountId: account.providerAccountId },
+            };
+
+            // 이미 가입된 회원이면 회원가입이 되지 않고 에러를 응답하므로 무시하면 됨
+            const result = await signupWithOAuth(newUser);
+            console.log('회원 가입', result);
+            
+            // 자동 로그인
+            const resData = await loginOAuth(account.providerAccountId);
+            if(resData.ok){
+              userInfo = resData.item;
+              console.log(userInfo);
+            }else{ // API 서버의 에러 메시지 처리
+              throw new Error(resData.message);
             }
-          */
-          console.log('깃허브 로그인 정보', user);
-          break;
+          }catch(err){
+            console.error(err);
+            throw err;
+          }
+          
+          user.id = String(userInfo._id);
+          user.type = userInfo.type;
+          user.accessToken = userInfo.token!.accessToken;
+          user.refreshToken = userInfo.token!.refreshToken;
+          
+          break;        
       }
 
       return true;
@@ -133,7 +178,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // JWT 토큰이 생성될 때, 업데이트될 때 호출
     // 로그인 성공한 회원 정보로 token 객체 설정
     // 최초 로그인시 user 객체 전달, 업데이트시나 세션 조회용으로 호출되면 user는 없음
-    async jwt({ token, user, account, profile, session }) {
+    async jwt({ token, user, account, profile, session, trigger }) {
       /*
         callbacks.jwt {
           name: '네오',
@@ -146,8 +191,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: '네오',
           type: 'seller',
           image: 'http://localhost/files/00-next-level/user-neo.webp',
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoi64Sk7JikIiwiaW1hZ2UiOiIvZmlsZXMvMDAtbmV4dC1sZXZlbC91c2VyLW5lby53ZWJwIiwiaWF0IjoxNzIzMDc4Njk0LCJleHAiOjE3MjMxNjUwOTQsImlzcyI6IkZFU1AifQ.HNWOWlROMq1KEoIqZB5i5bwKOK77O9tuH0h5m8izqVg',
-          refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjMwNzg2OTQsImV4cCI6MTcyNTY3MDY5NCwiaXNzIjoiRkVTUCJ9.fL9lWVPI7ZS59HVgsIL7Fof9b5MaApCirsA_nclg-As'
+          accessToken: '...',
+          refreshToken: '...'
         } {
           providerAccountId: '2',
           type: 'credentials',
@@ -170,8 +215,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           sub: '2',
           id: '2',
           type: 'seller',
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoi64Sk7JikIiwiaW1hZ2UiOiIvZmlsZXMvMDAtbmV4dC1sZXZlbC91c2VyLW5lby53ZWJwIiwiaWF0IjoxNzIzMDc4Njk0LCJleHAiOjE3MjMxNjUwOTQsImlzcyI6IkZFU1AifQ.HNWOWlROMq1KEoIqZB5i5bwKOK77O9tuH0h5m8izqVg',
-          refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjMwNzg2OTQsImV4cCI6MTcyNTY3MDY5NCwiaXNzIjoiRkVTUCJ9.fL9lWVPI7ZS59HVgsIL7Fof9b5MaApCirsA_nclg-As',
+          accessToken: '...',
+          refreshToken: '...',
           iat: 1723078694,
           exp: 1723165094,
           jti: '1535edee-7491-4bd5-9efe-7daf0e4a6698'
@@ -207,6 +252,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }else{
             if(res.status === 401){ // 인증 되지 않음(리플래시 토큰 인증 실패)
               console.log('리플래시 토큰 인증 실패. 로그인 페이지로 이동해야 함', await res.json());
+              
             }
           }          
         } catch (error) {
@@ -219,7 +265,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
         }
       }else{
-        console.log(`토큰 ${accessTokenExpires - Date.now()} ms 남음`);
+        // console.log(`토큰 ${accessTokenExpires - Date.now()} ms 남음`);
+      }
+
+
+      // 세션 없데이트
+      if(trigger === 'update' && session){
+        token.name = session.name;
       }
 
       return token;
@@ -244,8 +296,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           sub: '2',
           id: '2',
           type: 'seller',
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoi64Sk7JikIiwiaW1hZ2UiOiIvZmlsZXMvMDAtbmV4dC1sZXZlbC91c2VyLW5lby53ZWJwIiwiaWF0IjoxNzIzMDc4Njk0LCJleHAiOjE3MjMxNjUwOTQsImlzcyI6IkZFU1AifQ.HNWOWlROMq1KEoIqZB5i5bwKOK77O9tuH0h5m8izqVg',
-          refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjMwNzg2OTQsImV4cCI6MTcyNTY3MDY5NCwiaXNzIjoiRkVTUCJ9.fL9lWVPI7ZS59HVgsIL7Fof9b5MaApCirsA_nclg-As',
+          accessToken: '...',
+          refreshToken: '...',
           iat: 1723078694,
           exp: 1723165094,
           jti: '1535edee-7491-4bd5-9efe-7daf0e4a6698'
@@ -260,11 +312,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     // 로그인/로그아웃 후 리디렉션할 URL 지정
+    // redirect 함수를 제공할 경우 signIn 호출시 두번째 인자로 전달하는 옵션의 redirectTo는 동작하지 않음
+    // signIn('google', { redirectTo: '/music' });
+    // url: signIn 콜백 함수가 반환한 값
     // baseUrl: NEXTAUTH_URL 환경변수에 설정된 값
-    async redirect({ url, baseUrl }){
-      // console.log('callbacks.redirect', url, baseUrl);
-      return baseUrl;
-    },
+    // async redirect({ url, baseUrl }){
+    //   console.log('callbacks.redirect', url, baseUrl);
+    //   return baseUrl;
+    // },
   },
 })
 
