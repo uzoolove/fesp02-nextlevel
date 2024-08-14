@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import PostForm from "./MusicForm";
+import MusicForm from "./MusicForm";
 
 export function generateMetadata(): Metadata {
   const boardName = '음악 신청';
@@ -22,7 +22,7 @@ export default function Page() {
         <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200">DJ 게시글 등록</h2>
       </div>
       <section className="mb-8 p-4">
-        <PostForm />
+        <MusicForm />
       </section>
     </main>
   );

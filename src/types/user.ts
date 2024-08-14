@@ -1,11 +1,11 @@
 export interface UserData {
   _id: number,
-  email: string,
-  name: string,
+  email?: string,
+  name?: string,
   phone?: string,
   address?: string,
   type: 'user' | 'seller' | 'admin',
-  loginType?: 'email' | 'kakao',
+  loginType?: 'email' | 'kakao' | 'google' | 'github',
   image?: string,
   token?: {
     accessToken: string,
@@ -13,7 +13,12 @@ export interface UserData {
   },
   createdAt: string,
   updatedAt: string,
+  extra?: {
+    [key: string]: any;
+  }
 }
+
+export type OAuthUser = Required<Pick<UserData, 'type' | 'loginType'>> & Partial<Pick<UserData, 'name' | 'email' | 'image' | 'extra'>>;
 
 export type UserInToken = Required<Pick<UserData, '_id' | 'name'>> & Pick<UserData, 'image'> & {
   accessToken: string,
