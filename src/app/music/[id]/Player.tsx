@@ -7,8 +7,8 @@ const Player = React.memo(function MemoizationPlayer ({ setPlayer }: { setPlayer
   return (
     <YouTube
       opts={{
-        width: "560",
-        height: "315",
+        width: "1020",
+        // height: "315",
         playerVars: {
           // autoplay: 1, //자동재생
           modestbranding: 1, // YouTube 로고를 최소화
