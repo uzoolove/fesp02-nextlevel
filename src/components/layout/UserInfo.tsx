@@ -1,13 +1,14 @@
 'use client';
 
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Submit from '../Submit';
 
 export default function UserInfo({ name, image }: { image: string, name: string }) {
+  const { update } = useSession();
   return (
     <form action={() => signOut()}>
-      <p className="flex items-center">
+      <p className="flex items-center" onClick={() => update({name: '홍길동'})}>
         { image && (
           <Image 
             className="w-8 rounded-full mr-2" 
