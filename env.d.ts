@@ -12,5 +12,8 @@ declare namespace NodeJS {
     GITHUB_CLIENT_ID: string;
     GITHUB_CLIENT_SECRET: string;
     GOOGLE_API_KEY: string;
+
+    NEXT_PUBLICE_WEBSOCKET_SERVER: string,
+    NEXT_PUBLICE_WEBSOCKET_SERVER_NAMESPACE: string,
   }
 }

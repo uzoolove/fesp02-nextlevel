@@ -23,6 +23,8 @@
     "react-spinners": "^0.14.1",
     "react-youtube": "^10.1.0",
     "sharp": "^0.33.4",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
