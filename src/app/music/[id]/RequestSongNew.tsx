@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { fetchVideoInfo } from '@/model/fetch/postFetch';
 
-export default function RequestSongNew({ id }: { id: string } ) {
-  const router = useRouter();
+export default function RequestSongNew({ id, onNewSong }: { id: string, onNewSong: () => Promise<void> } ) {
+  // const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<MusicComment>();
 
@@ -25,7 +25,8 @@ export default function RequestSongNew({ id }: { id: string } ) {
       }
     }
     addComment(id, commentObj);
-    router.refresh();
+    onNewSong();
+    // router.refresh();
   };
 
   return (
@@ -35,7 +36,17 @@ export default function RequestSongNew({ id }: { id: string } ) {
       <form onSubmit={ handleSubmit(handleAdd) }>
         <div className="mb-4">
           <div className="flex items-center">
-            <label className="block text-gray-700 dark:text-gray-200 mb-2 mr-4" htmlFor="videoId">유튜브 URL 또는 ID</label>
+            <label className="block text-gray-700 dark:text-gray-200 mb-2 mr-4" htmlFor="name">작성자</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="작성자"
+              className="w-48 px-3 py-2 border rounded-lg focus:outline-none focus:border-orange-400 dark:bg-gray-700"
+              { ...register('name') }
+            />
+          </div>
+          <div className="flex items-center">
+            <label className="block text-gray-700 dark:text-gray-200 mb-2 mr-4" htmlFor="videoId">신청곡</label>
             <input
               id="videoId"
               type="text"
