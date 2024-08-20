@@ -1,9 +1,13 @@
 import Link from "next/link";
-import Theme from "../Theme";
-import MainMenu from "./MainMenu";
+// import Theme from "../Theme";
+
 import Image from "next/image";
-import UserInfo from "./UserInfo";
+import LoginInfo from "./LoginInfo";
+
+
 import { auth } from "@/auth";
+import Theme from "@/components/Theme";
+import MainMenu from "@/components/layout/MainMenu";
 
 export default async function Header() {
   const session = await auth();
@@ -26,7 +30,7 @@ export default async function Header() {
         <div className="w-1/2 order-1 flex justify-end items-center md:order-2 md:w-auto">
 
           { session?.user ? (
-           <UserInfo name={session.user.name!} image={session.user.image!}/>
+           <LoginInfo name={session.user.name!} image={session.user.image!}/>
           ) : (
             <div className="flex justify-end">
               <Link href="/login" className="bg-orange-500 py-1 px-2 text-sm text-white font-semibold ml-2 hover:bg-amber-400 rounded">로그인</Link>
