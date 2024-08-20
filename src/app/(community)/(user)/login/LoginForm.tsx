@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
-  const { register, handleSubmit, formState: { errors }, setError } = useForm<UserForm>();
+  const { register, handleSubmit, formState: { errors, isLoading, isSubmitted  }, setError } = useForm<UserForm>();
 
   const login = async (loginData: UserLoginForm) => {
     // 프로그래밍 방식으로 서버액션 호출
@@ -26,6 +26,12 @@ export default function LoginForm() {
         alert(resData.message);
       }
     }
+  }
+
+  console.log(isLoading, isSubmitted);
+  if(isLoading) {
+    console.log('로딩중...')
+    return <p>로딩중...</p>
   }
 
   return (

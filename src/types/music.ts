@@ -7,7 +7,8 @@ export interface PlayHistory {
 }
 
 export interface MusicComment extends PostComment{
-  videoId: string
+  videoId: string,
+  name?: string,
 }
 
 export type MusicType = Pick<Post, 'title' | 'content'> & {

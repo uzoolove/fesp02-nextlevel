@@ -18,14 +18,7 @@ export default async function Page({ params }: { params: { type: string, id: str
 
       <InfoForm id={params.id} item={item} />
 
-      
-
-      {/* <PlayHistory /> */}
-
-      <PlayerContainer id={params.id} item={item} />
-      {/* <PlayerMemo id={params.id} /> */}
-
-      
+      <PlayerContainer id={params.id} item={item} />      
 
       <RequestSongList type={params.type} id={params.id} />
 
