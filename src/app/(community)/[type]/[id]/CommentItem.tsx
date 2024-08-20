@@ -1,4 +1,5 @@
 import Submit from "@/components/Submit";
+import UserInfo from "@/components/UserInfo";
 import { PostComment } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,14 +9,7 @@ export default function CommentItem({ item }: { item: PostComment }){
   return (
     <div className="shadow-md rounded-lg p-4 mb-4">
       <div className="flex justify-between items-center mb-2">
-        <Image
-          className="w-8 mr-2 rounded-full"
-          width="40"
-          height="40"
-          src={`${process.env.NEXT_PUBLIC_API_SERVER}${item.user.image}`}
-          alt="프로필 이미지"
-        />
-        <Link href="" className="text-orange-400">{item.user.name}</Link>
+        <UserInfo user={item.user} />
         <time className="ml-auto text-gray-500" dateTime={item.updatedAt}>{item.updatedAt}</time>
       </div>
       <div className="flex justify-between items-center mb-2">
