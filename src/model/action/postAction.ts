@@ -15,6 +15,7 @@ export async function addPost(formData: FormData): Promise<ApiRes<SingleItem<Pos
   const postData = {
     type: formData.get('type'),
     title: formData.get('title'),
+    private: Boolean(formData.get('private')),
     content: formData.get('content'),
   }
 

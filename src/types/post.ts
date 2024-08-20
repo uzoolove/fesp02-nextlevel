@@ -11,16 +11,23 @@ export interface PostComment {
   updatedAt: string,
 }
 
-export interface Post {
+interface BasePost {
   _id: number,
   type?: string,
-  title: string,
   content: string,
   user: ReplyUser,
-  views: number,
-  repliesCount: number,
-  replies?: PostComment[],
+  parivate?: boolean,
   createdAt: string,
   updatedAt: string,
 }
 
+export interface Post extends BasePost {
+  title: string,
+  views: number,
+  repliesCount: number,
+  replies?: PostComment[],
+}
+
+export interface Diary extends BasePost {
+  title: string,
+}
