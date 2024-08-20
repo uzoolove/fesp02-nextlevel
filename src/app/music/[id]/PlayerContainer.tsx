@@ -235,7 +235,7 @@ export default function PlayerContainer({ id, item }: { id: string, item: MusicT
       player?.pauseVideo();
 
       // 코멘트 읽기
-      const name = nextMusic.user.name;
+      const name = nextMusic.user?.name || nextMusic.name;
       const msg = nextMusic.content || nextMusic.content;
 
       const comment = `${ msg ? name + '님의 사연입니다.' : (name && name + '님의 신청곡입니다.') } ${ msg }`;

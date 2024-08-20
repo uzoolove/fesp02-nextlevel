@@ -16,7 +16,7 @@ export default function RequestSongItem({ item }: { item: MusicComment }){
             alt="프로필 이미지"
           />
         }
-        <Link href="" className="text-orange-400">{ item.user.name }</Link>
+        <Link href="#" className="text-orange-400">{ item.name || item.user?.name }</Link>
         <time className="ml-auto text-gray-500" dateTime="{ item.updatedAt }">{ item.updatedAt }</time>
       </div>
       <div className="flex justify-between items-center mb-2">
