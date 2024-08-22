@@ -9,7 +9,7 @@ import { fetchAccessToken } from './model/fetch/userFetch';
 
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update: update } = NextAuth({
   trustHost: true, // 배포시 필요
   providers: [ 
     CredentialsProvider({
@@ -29,6 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             type: user.type,
             image: user.image && (SERVER + user.image),
+            notifications: user.notifications,
             accessToken: user.token!.accessToken,
             refreshToken: user.token!.refreshToken,
           };
@@ -165,6 +166,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           
           user.id = String(userInfo._id);
           user.type = userInfo.type;
+          user.notifications = userInfo.notifications;
           user.accessToken = userInfo.token!.accessToken;
           user.refreshToken = userInfo.token!.refreshToken;
           
@@ -229,6 +231,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.type = user.type;
+        token.notifications = user.notifications;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
       }
@@ -306,6 +309,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // console.log('callbacks.session', session, token);
       session.user.id = token.id as string;
       session.user.type = token.type as string;
+      session.user.notifications = token.notifications as number;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       return session;

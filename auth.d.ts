@@ -3,6 +3,7 @@
 export declare module '@auth/core/types' {
   interface User {
     type: string,
+    notifications: number,
     accessToken: string,
     refreshToken: string,
   }

@@ -7,6 +7,7 @@ export interface UserData {
   type: 'user' | 'seller' | 'admin',
   loginType?: 'email' | 'kakao' | 'google' | 'github',
   image?: string,
+  notifications: number;
   token?: {
     accessToken: string,
     refreshToken: string,
