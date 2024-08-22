@@ -27,6 +27,10 @@ const playTime: Timer[] = [
   // },
 
   {
+    start: '20 09 * * *',
+    finish: '30 09 * * *'
+  },
+  {
     start: '20 10 * * *',
     finish: '30 10 * * *'
   },
