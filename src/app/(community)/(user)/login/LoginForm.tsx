@@ -9,7 +9,12 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
-  const { register, handleSubmit, formState: { errors, isLoading, isSubmitted  }, setError } = useForm<UserForm>();
+  const { register, handleSubmit, formState: { errors, isLoading, isSubmitted  }, setError } = useForm<UserForm>({
+    defaultValues: {
+      email: 's1@market.com',
+      password: '11111111'
+    }
+  });
 
   const login = async (loginData: UserLoginForm) => {
     // 프로그래밍 방식으로 서버액션 호출
