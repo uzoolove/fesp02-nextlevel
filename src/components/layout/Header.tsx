@@ -2,7 +2,7 @@ import Link from "next/link";
 // import Theme from "../Theme";
 
 import Image from "next/image";
-import LoginInfo from "./LoginInfo";
+import LoginInfo from "../LoginInfo";
 
 
 import { auth } from "@/auth";
@@ -30,7 +30,7 @@ export default async function Header() {
         <div className="w-1/2 order-1 flex justify-end items-center md:order-2 md:w-auto">
 
           { session?.user ? (
-           <LoginInfo name={session.user.name!} image={session.user.image!}/>
+           <LoginInfo name={session.user.name!} image={session.user.image!} notifications={session.user.notifications}/>
           ) : (
             <div className="flex justify-end">
               <Link href="/login" className="bg-orange-500 py-1 px-2 text-sm text-white font-semibold ml-2 hover:bg-amber-400 rounded">로그인</Link>
