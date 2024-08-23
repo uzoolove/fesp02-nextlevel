@@ -1,6 +1,6 @@
 'use client';
 
-import { MembersData, MsgItem, RoomItem } from "@/types/websocket";
+import { MembersData, MsgItem, RoomItem } from "@/types";
 import { socket } from "@/utils/websocket";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
