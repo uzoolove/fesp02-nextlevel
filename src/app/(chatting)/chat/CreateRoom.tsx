@@ -1,6 +1,6 @@
 'use client';
 
-import { MsgItem, RoomsData } from "@/types/websocket";
+import { MsgItem, RoomsData } from "@/types";
 import { socket } from "@/utils/websocket";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export default function CreateRoom(){
     // 서버 접속
     socket.connect();
     // 채팅방 목록 조회
-    socket.emit('getRooms', rooms => setRooms(rooms));
+    socket.emit('getRooms', (rooms: RoomsData) => setRooms(rooms));
 
     return () => {
       socket.off('connect', onConnect);
