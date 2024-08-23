@@ -15,7 +15,7 @@ export interface ServerToClientEvents {
 // 클라이언트가 서버로 보낼 이벤트 정의
 export interface ClientToServerEvents {
   // 회원 id 등록
-  setUserId: (userId: string, callback: () => void ) => void;
+  setUserId: (userId: string, callback: (notiList: NotiMessageType[]) => void ) => void;
   // 채팅방 목록 조회
   getRooms: (callback: (rooms: RoomsData) => void) => void;
   // 채팅방 멤버 조회
