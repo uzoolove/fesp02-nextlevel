@@ -1,24 +1,18 @@
+import { CommonType } from "@/types/common";
 import { MusicComment } from "./music";
 import { ReplyUser } from "./user"
 
-export interface PostComment {
-  _id: number,
+export interface PostComment extends CommonType{
   user: ReplyUser,
   content: string,
   // videoId?: string,
-  extra?: Record<string, any>,
-  createdAt: string,
-  updatedAt: string,
 }
 
-interface BasePost {
-  _id: number,
+interface BasePost extends CommonType {
   type?: string,
   content: string,
   user: ReplyUser,
   parivate?: boolean,
-  createdAt: string,
-  updatedAt: string,
 }
 
 export interface Post extends BasePost {

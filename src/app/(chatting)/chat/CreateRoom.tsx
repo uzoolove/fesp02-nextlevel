@@ -1,6 +1,6 @@
 'use client';
 
-import { MsgItem, RoomsData } from "@/types/chatting";
+import { MsgItem, RoomsData } from "@/types/websocket";
 import { socket } from "@/utils/websocket";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -16,6 +16,7 @@ export default function CreateRoom(){
 
   useEffect(() => {
     function onConnect() {
+      console.log('서버 접속됨.');
       setIsConnected(true);
     }
 

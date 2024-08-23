@@ -1,5 +1,5 @@
-export interface UserData {
-  _id: number,
+import { CommonType } from "@/types/common";
+export interface UserData extends CommonType {
   email?: string,
   name?: string,
   phone?: string,
@@ -7,16 +7,10 @@ export interface UserData {
   type: 'user' | 'seller' | 'admin',
   loginType?: 'email' | 'kakao' | 'google' | 'github',
   image?: string,
-  notifications: number;
   token?: {
     accessToken: string,
     refreshToken: string,
   },
-  createdAt: string,
-  updatedAt: string,
-  extra?: {
-    [key: string]: any;
-  }
 }
 
 export type OAuthUser = Required<Pick<UserData, 'type' | 'loginType'>> & Partial<Pick<UserData, 'name' | 'email' | 'image' | 'extra'>>;
@@ -35,4 +29,4 @@ export type UserForm = Pick<UserData, 'name' | 'email' | 'image'> & {
 export type UserLoginForm = Pick<UserForm, 'email' | 'password'>;
 
 
-export type ReplyUser = Pick<UserData, '_id' | 'name' | 'image'>;
+export type ReplyUser = Pick<UserData, '_id' | 'name' | 'email' | 'image'>;

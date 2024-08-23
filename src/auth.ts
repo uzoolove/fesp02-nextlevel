@@ -29,7 +29,6 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
             name: user.name,
             type: user.type,
             image: user.image && (SERVER + user.image),
-            notifications: user.notifications,
             accessToken: user.token!.accessToken,
             refreshToken: user.token!.refreshToken,
           };
@@ -55,7 +54,10 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
     // maxAge: 60,
   },
   pages: {
-    signIn: '/notice' // Default: '/auth/signin'
+    // import { signIn } from "next-auth/react";
+    // signIn() 호출시 이동할 페이지 지정
+    // 기본값은 내장된 로그인 페이지인 '/auth/signin'
+    signIn: '/login'
   },
   callbacks: {
     // 로그인 처리를 계속 할지 여부 결정. 로그인한 후 추가 검증을 하거나 특정 조건에 따라서 로그인 성공/실패를 다시 결정할 때 사용
@@ -166,7 +168,6 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
           
           user.id = String(userInfo._id);
           user.type = userInfo.type;
-          user.notifications = userInfo.notifications;
           user.accessToken = userInfo.token!.accessToken;
           user.refreshToken = userInfo.token!.refreshToken;
           
@@ -231,7 +232,6 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
       if (user) {
         token.id = user.id;
         token.type = user.type;
-        token.notifications = user.notifications;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
       }
@@ -309,7 +309,6 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
       // console.log('callbacks.session', session, token);
       session.user.id = token.id as string;
       session.user.type = token.type as string;
-      session.user.notifications = token.notifications as number;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       return session;
