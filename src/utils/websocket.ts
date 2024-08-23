@@ -1,4 +1,4 @@
-import { ClientToServerEvents, ServerToClientEvents } from "@/types/websocket";
+import { ClientToServerEvents, ServerToClientEvents } from "@/types";
 import { io, Socket } from "socket.io-client";
 
 const URL = `${process.env.NEXT_PUBLIC_API_SERVER}/${process.env.NEXT_PUBLIC_API_SERVER_CLIENT_ID}`;
