@@ -20,7 +20,6 @@ export default function LoginForm() {
     // 프로그래밍 방식으로 서버액션 호출
     // 로그인 성공시 리턴값 없음
     const resData = await signInWithCredentials(loginData);
-    console.log(resData);
     if(!resData){
       alert(`로그인 되었습니다.`);
       // router.push('/');
@@ -33,11 +32,10 @@ export default function LoginForm() {
     }
   }
 
-  console.log(isLoading, isSubmitted);
-  if(isLoading) {
-    console.log('로딩중...')
-    return <p>로딩중...</p>
-  }
+  // if(isLoading) {
+  //   console.log('로딩중...')
+  //   return <p>로딩중...</p>
+  // }
 
   return (
     <form>
