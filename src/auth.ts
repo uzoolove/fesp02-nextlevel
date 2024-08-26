@@ -51,7 +51,8 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
   session: {
     strategy: 'jwt', // JSON Web Token 사용(기본값)
     maxAge: 60 * 60 * 24, // 세션 만료 시간(sec)
-    // maxAge: 60,
+    // maxAge: 10,
+    // maxAge: 0 // 브라우저 닫으면 만료
   },
   pages: {
     // import { signIn } from "next-auth/react";

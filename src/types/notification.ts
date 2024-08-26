@@ -9,3 +9,8 @@ export interface NotiMessageType extends CommonType{
   user: ReplyUser;
   isRead: boolean;
 }
+
+export interface NotiRes {
+  list: NotiMessageType[];
+  newNoti: NotiMessageType;
+}

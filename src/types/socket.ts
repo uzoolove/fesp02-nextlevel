@@ -1,4 +1,4 @@
-import { NotiMessageType } from '@/types/notification';
+import { NotiMessageType, NotiRes } from '@/types/notification';
 
 // 서버에서 클라이언트로 보낼 이벤트 정의
 export interface ServerToClientEvents {
@@ -9,13 +9,13 @@ export interface ServerToClientEvents {
   // 채팅방 멤버 목록 변경시
   setMembers: (data: MembersData) => void;
   // 알림 메세지 수신
-  notiList: (data: NotiMessageType[]) => void;
+  notification: (data: NotiRes) => void;
 }
 
 // 클라이언트가 서버로 보낼 이벤트 정의
 export interface ClientToServerEvents {
   // 회원 id 등록
-  setUserId: (userId: string, callback: (notiList: NotiMessageType[]) => void ) => void;
+  setUserId: (userId: string, callback: (data: NotiRes) => void ) => void;
   // 채팅방 목록 조회
   getRooms: (callback: (rooms: RoomsData) => void) => void;
   // 채팅방 멤버 조회
