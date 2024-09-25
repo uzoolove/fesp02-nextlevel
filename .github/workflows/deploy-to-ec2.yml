@@ -1,0 +1,93 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 깃허브의 ubuntu Runner 사용
+
+    env: # 환경 변수 설정
+      EC2_HOST: ${{ vars.EC2_HOST }}
+      EC2_USER: ${{ vars.EC2_USER }}
+      EC2_KEY: ${{ secrets.EC2_KEY }}
+
+      PROJECT_NAME: ${{ github.event.repository.name }} # 프로젝트 이름을 환경 변수로 설정
+
+    steps: # 작업
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js app
+        env:
+          NEXT_PUBLIC_API_SERVER: ${{ vars.NEXT_PUBLIC_API_SERVER }}
+          NEXT_PUBLIC_API_SERVER_CLIENT_ID: ${{ vars.NEXT_PUBLIC_API_SERVER_CLIENT_ID }}
+          NEXT_PUBLIC_DELAY_TIME: ${{ vars.NEXT_PUBLIC_DELAY_TIME }}
+          NEXT_PUBLIC_LIST_LIMIT: ${{ vars.NEXT_PUBLIC_LIST_LIMIT }}
+          NEXT_PUBLIC_NEXT_SERVER: ${{ vars.NEXT_PUBLIC_NEXT_SERVER }}
+        
+        run: npm run build
+
+      - name: Compress build folder
+        run: tar -czf ${{ github.event.repository.name }}.tar.gz package.json public node_modules .next
+
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ vars.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Create project directory on EC2
+        run: |
+          ssh -i ec2_key.pem ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} << EOF
+            mkdir -p /home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
+          EOF
+
+
+
+      - name: Copy files to EC2
+        run: |
+          scp -i ec2_key.pem ${{ github.event.repository.name }}.tar.gz ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }}:/home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
+
+      - name: Deploy on EC2
+        # env:
+        #   AUTH_GITHUB_CLIENT_ID: ${{ secrets.AUTH_GITHUB_CLIENT_ID }}
+        #   AUTH_GITHUB_CLIENT_SECRET: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
+        #   AUTH_GOOGLE_CLIENT_ID: ${{ secrets.AUTH_GOOGLE_CLIENT_ID }}
+        #   AUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}
+        #   API_KEY_GOOGLE: ${{ secrets.API_KEY_GOOGLE }}
+        run: |
+          ssh -i ec2_key.pem ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} << EOF
+            cd /home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
+            
+            # 배포 파일을 현재 디렉토리에 풀기
+            tar -xzf ${{ github.event.repository.name }}.tar.gz
+            cd ${{ github.event.repository.name }}
+            npm install --production
+
+            # 환경 변수를 .env 파일에 추가
+            echo "API_KEY_GOOGLE=${{ secrets.API_KEY_GOOGLE }}" >> .env
+            echo "AUTH_GITHUB_CLIENT_ID=${{ secrets.AUTH_GITHUB_CLIENT_ID }}" >> .env
+            echo "AUTH_GITHUB_CLIENT_SECRET=${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}" >> .env
+            echo "AUTH_GOOGLE_CLIENT_ID=${{ secrets.AUTH_GOOGLE_CLIENT_ID }}" >> .env
+            echo "AUTH_GOOGLE_CLIENT_SECRET=${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}" >> .env
+            echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
+
+            # 프로세스 재시작
+            # pm2 stop all || true
+            # pm2 start npm --name "FES11-bot-daemon" -- run start
+            # pm2 save
+
+            npm start
+          EOF
