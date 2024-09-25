@@ -84,5 +84,7 @@ jobs:
             echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
 
             # 프로세스 재시작
-            sudo PORT=80 pm2 restart npm --name "next-level" -- start
+            pm2 stop next-level || true
+            sudo PORT=80 pm2 start npm --name "next-level" -- start
+            pm2 save
           EOF
