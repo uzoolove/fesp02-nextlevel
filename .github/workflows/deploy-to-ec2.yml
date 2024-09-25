@@ -73,7 +73,6 @@ jobs:
             
             # 배포 파일을 현재 디렉토리에 풀기
             tar -xzf ${{ github.event.repository.name }}.tar.gz
-            cd ${{ github.event.repository.name }}
             npm install --production
 
             # 환경 변수를 .env 파일에 추가
