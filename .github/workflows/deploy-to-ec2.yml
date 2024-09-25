@@ -85,9 +85,7 @@ jobs:
             echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
 
             # 프로세스 재시작
-            # pm2 stop all || true
-            # pm2 start npm --name "FES11-bot-daemon" -- run start
-            # pm2 save
-
-            npm start
+            pm2 stop next-level-app || true
+            pm2 start npm --name "next-level-app" -- run start
+            pm2 save
           EOF
