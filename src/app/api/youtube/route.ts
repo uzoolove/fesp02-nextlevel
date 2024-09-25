@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const videoId = searchParams.get('videoId')
-  const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${process.env.GOOGLE_API_KEY}&part=snippet&id=${videoId}`);
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${process.env.API_KEY_GOOGLE}&part=snippet&id=${videoId}`);
   const data = await res.json();
   console.log(data);
   if(data.items.length === 0 ){

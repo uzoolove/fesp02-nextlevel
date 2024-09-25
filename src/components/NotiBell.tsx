@@ -22,21 +22,24 @@ export default function NotiBell({ userId }: { userId: string }){
     }
   }
 
-  // 서버 접속 완료시
-  const onConnect = () => {
-    socket.emit('setUserId', userId, () => {
-      setIsConnected(true);
-    });
-
-    socket.on('notification', onNotiMessage);
-  }
-
-  const onDisconnect = () => {
-    setIsConnected(false);
-    socket.off('notification', onNotiMessage);
-  }
+  
 
   useEffect(() => {
+    // 서버 접속 완료시
+    const onConnect = () => {
+      socket.emit('setUserId', userId, () => {
+        setIsConnected(true);
+      });
+
+      socket.on('notification', onNotiMessage);
+      console.log('socket.on(notification)');
+    }
+
+    const onDisconnect = () => {
+      setIsConnected(false);
+      socket.off('notification', onNotiMessage);
+    }
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 

@@ -7,13 +7,14 @@ declare namespace NodeJS {
     NEXT_PUBLIC_NEXT_SERVER: string;
     NEXT_PUBLIC_LIST_LIMIT: string;
     NEXT_PUBLIC_DELAY_TIME: string;
-    GOOGLE_CLIENT_ID: string;
-    GOOGLE_CLIENT_SECRET: string;
-    GITHUB_CLIENT_ID: string;
-    GITHUB_CLIENT_SECRET: string;
-    GOOGLE_API_KEY: string;
-
     NEXT_PUBLICE_WEBSOCKET_SERVER: string,
     NEXT_PUBLICE_WEBSOCKET_SERVER_NAMESPACE: string,
+
+    AUTH_GOOGLE_CLIENT_ID: string;
+    AUTH_GOOGLE_CLIENT_SECRET: string;
+    AUTH_GITHUB_CLIENT_ID: string;
+    AUTH_GITHUB_CLIENT_SECRET: string;
+
+    API_KEY_GOOGLE: string;
   }
 }
