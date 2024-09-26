@@ -35,7 +35,7 @@ jobs:
           NEXT_PUBLIC_DELAY_TIME: ${{ vars.NEXT_PUBLIC_DELAY_TIME }}
           NEXT_PUBLIC_LIST_LIMIT: ${{ vars.NEXT_PUBLIC_LIST_LIMIT }}
           NEXT_PUBLIC_NEXT_SERVER: ${{ vars.NEXT_PUBLIC_NEXT_SERVER }}
-        
+          
         run: npm run build
 
       - name: Compress build folder
@@ -82,6 +82,7 @@ jobs:
             echo "AUTH_GOOGLE_CLIENT_ID=${{ secrets.AUTH_GOOGLE_CLIENT_ID }}" >> .env
             echo "AUTH_GOOGLE_CLIENT_SECRET=${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}" >> .env
             echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
+            echo "NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}" >> .env
 
             # 프로세스 재시작
             pm2 stop next-level || true
