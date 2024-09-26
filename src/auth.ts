@@ -10,7 +10,7 @@ import { fetchAccessToken } from './model/fetch/userFetch';
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
 export const { handlers, signIn, signOut, auth, unstable_update: update } = NextAuth({
-  trustHost: true, // 배포시 필요
+  trustHost: true, // 배포시 필요(현재 호스트를 신뢰. 리디렉션에 사용되는 AUTH_URL 설정이 필요 없고 현재 호스트가 자동으로 지정됨)
   providers: [ 
     CredentialsProvider({
       credentials: {
