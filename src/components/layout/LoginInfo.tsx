@@ -23,7 +23,7 @@ export default function LoginInfo() {
 
   const handleSignOut = async () => {
     try {
-      await signOut({ callbackUrl: '/' });
+      await signOut({ callbackUrl: 'https://next.fesp.shop' });
     } catch (error) {
       console.error('Sign out error:', error);
     }
