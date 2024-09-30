@@ -39,10 +39,10 @@ jobs:
         run: npm run build
 
       - name: Install dependencies for production
-        run: npm prune --production
+        run: npm prune --omit=dev
 
       - name: Compress build folder
-        run: tar -czf ${{ github.event.repository.name }}.tar.gz package.json public node_modules .next
+        run: tar -czf ${{ github.event.repository.name }}.tar.gz package.json public node_modules .next next.config.mjs
 
       - name: Install SSH key
         run: |
