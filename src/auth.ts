@@ -10,7 +10,7 @@ import { fetchAccessToken } from './model/fetch/userFetch';
 const SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
 export const { handlers, signIn, signOut, auth, unstable_update: update } = NextAuth({
-  trustHost: true, // 배포시 필요(현재 호스트를 신뢰. 리디렉션에 사용되는 AUTH_URL 설정이 필요 없고 현재 호스트가 자동으로 지정됨)
+  trustHost: true, // 배포시 필요(현재 호스트를 신뢰. 리디렉션에 사용되는 (NEXT)AUTH_URL 설정이 필요 없고 현재 호스트가 자동으로 지정됨)
   providers: [ 
     CredentialsProvider({
       credentials: {
@@ -319,7 +319,7 @@ export const { handlers, signIn, signOut, auth, unstable_update: update } = Next
     // redirect 함수를 제공할 경우 signIn 호출시 두번째 인자로 전달하는 옵션의 redirectTo는 동작하지 않음
     // signIn('google', { redirectTo: '/music' });
     // url: signIn 콜백 함수가 반환한 값
-    // baseUrl: NEXTAUTH_URL 환경변수에 설정된 값
+    // baseUrl: (NEXT)AUTH_URL 환경변수에 설정된 값
     // async redirect({ url, baseUrl }){
     //   console.log('callbacks.redirect', url, baseUrl);
     //   return baseUrl;
