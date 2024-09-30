@@ -10,13 +10,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'api.fesp.shop',
-        pathname: '/files/**',
+        // pathname: '/files/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'next.fesp.shop',
-        pathname: '/files/**',
-      },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'next.fesp.shop',
+      //   pathname: '/files/**',
+      // },
       {
         protocol: 'https',
         hostname: '*.googleusercontent.com',
