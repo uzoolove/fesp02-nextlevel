@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install dependencies for build
         run: npm install
 
       - name: Build Next.js app
@@ -37,6 +37,9 @@ jobs:
           NEXT_PUBLIC_NEXT_SERVER: ${{ vars.NEXT_PUBLIC_NEXT_SERVER }}
           
         run: npm run build
+
+      - name: Install dependencies for production
+        run: npm prune --production
 
       - name: Compress build folder
         run: tar -czf ${{ github.event.repository.name }}.tar.gz package.json public node_modules .next
@@ -73,7 +76,6 @@ jobs:
             
             # 배포 파일을 현재 디렉토리에 풀기
             tar -xzf ${{ github.event.repository.name }}.tar.gz
-            npm install --production
 
             # 환경 변수를 .env 파일에 추가
             echo "API_KEY_GOOGLE=${{ secrets.API_KEY_GOOGLE }}" >> .env
@@ -85,6 +87,6 @@ jobs:
 
             # 프로세스 재시작
             pm2 stop next-level || true
-            sudo PORT=80 pm2 start npm --name "next-level" -- start
+            pm2 start npm --name "next-level" -- start
             pm2 save
           EOF
