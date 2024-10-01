@@ -16,11 +16,11 @@ jobs:
 
       PROJECT_NAME: ${{ github.event.repository.name }} # 프로젝트 이름을 환경 변수로 설정
 
-    steps: # 작업
-      - name: Checkout code
+    steps:
+      - name: Checkout code # 소스코드 체크아웃
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js # Node.js 설정
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -41,37 +41,27 @@ jobs:
       - name: Install dependencies for production
         run: npm prune --omit=dev
 
-      - name: Compress build folder
+      - name: Compress build folder # 빌드 결과물 압축
         run: tar -czf ${{ github.event.repository.name }}.tar.gz package.json public node_modules .next next.config.mjs
 
-      - name: Install SSH key
+      - name: Install SSH key # EC2 접속을 위한 SSH 키 생성
         run: |
-          set -e
-          set -x
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ vars.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "${{ secrets.EC2_KEY }}" > ec2_key.pem 
           chmod 600 ec2_key.pem
 
-      - name: Create project directory on EC2
+      - name: Create project directory on EC2 # EC2에 프로젝트명의 폴더 생성
         run: |
           ssh -i ec2_key.pem ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} << EOF
             mkdir -p /home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
           EOF
 
-
-
-      - name: Copy files to EC2
+      - name: Copy files to EC2 # 압축한 빌드 파일 EC2에 업로드
         run: |
           scp -i ec2_key.pem ${{ github.event.repository.name }}.tar.gz ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }}:/home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
 
-      - name: Deploy on EC2
-        # env:
-        #   AUTH_GITHUB_CLIENT_ID: ${{ secrets.AUTH_GITHUB_CLIENT_ID }}
-        #   AUTH_GITHUB_CLIENT_SECRET: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
-        #   AUTH_GOOGLE_CLIENT_ID: ${{ secrets.AUTH_GOOGLE_CLIENT_ID }}
-        #   AUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}
-        #   API_KEY_GOOGLE: ${{ secrets.API_KEY_GOOGLE }}
+      - name: Deploy on EC2 # EC2에 SSH 접속 후 배포 완료
         run: |
           ssh -i ec2_key.pem ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} << EOF
             cd /home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
