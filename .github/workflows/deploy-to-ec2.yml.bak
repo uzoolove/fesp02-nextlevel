@@ -66,7 +66,7 @@ jobs:
           ssh -i ec2_key.pem ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} << EOF
             cd /home/${{ vars.EC2_USER }}/${{ github.event.repository.name }}
             
-            # 배포 파일을 현재 디렉토리에 풀기
+            # 배포용 압축 파일을 현재 디렉토리에 풀기
             tar -xzf ${{ github.event.repository.name }}.tar.gz
 
             # 환경 변수를 .env 파일에 추가
